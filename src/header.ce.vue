@@ -37,11 +37,14 @@ const isAnonymous = computed(() => !state.user || state.user.anonymous)
 const isWarned = computed(() => state.user?.warned)
 const remainingDays = computed(() => state.user?.remainingDays)
 const loginUrl = computed(() => {
-  const current = new URL(window.location.href)
-  current.searchParams.set('login', '')
-  return current.toString()
+  const href = new URL(replaceUrlsVariables(state.config.login.url))
+  for (const param of state.config.login.params || []) {
+    const key = Object.keys(param)[0]
+    href.searchParams.set(key, replaceUrlsVariables(param[key]))
+  }
+  return href.toString()
 })
-const logoutUrl = computed(() => '/logout')
+const logoutUrl = computed(() => replaceUrlsVariables(state.config.logoutUrl))
 
 function checkCondition(item: Link | Separator | Dropdown): boolean {
   const hasRole = item.hasRole
@@ -58,7 +61,10 @@ function checkCondition(item: Link | Separator | Dropdown): boolean {
 }
 
 function replaceUrlsVariables(url: string): string {
-  return url.replace(/:lang3/, state.lang3)
+  return url
+    .replace(/:lang3/, state.lang3)
+    .replace(/:origin/, encodeURI(window.location.origin))
+    .replace(/:currentUrl/, encodeURI(window.location.href))
 }
 
 function determineActiveApp(): void {
@@ -496,7 +502,7 @@ onMounted(() => {
   }
 
   .nav-item {
-    @apply relative text-lg w-fit block after:hover:scale-x-100 lg:mx-3 md:mx-2 hover:text-black first-letter:capitalize text-base;
+    @apply relative w-fit block after:hover:scale-x-100 lg:mx-3 md:mx-2 hover:text-black first-letter:capitalize text-base;
   }
 
   .nav-item:after {

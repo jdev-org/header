@@ -4,7 +4,14 @@
     "logoUrl": "/public/logo-mel.jpg",
     "hideLogin": false,
     "iconsUrl": "https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css",
-    "lang": "fr"
+    "lang": "fr",
+    "login": {
+      "url": ":origin/login",
+      "params": [
+        {"redirect": ":origin/success"}
+      ]
+    },
+    "logoutUrl": "/logout"
   },
   "menu": [
     {

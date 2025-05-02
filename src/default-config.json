@@ -8,7 +8,14 @@
       "ROLE_GN_REVIEWER",
       "ROLE_GN_EDITOR",
       "ROLE_MAPSTORE_ADMIN"
-    ]
+    ],
+    "login": {
+      "url": ":origin/login",
+      "params": [
+        {"redirect": ":currentUrl"}
+      ]
+    },
+    "logoutUrl": "/logout"
   },
   "defaultMenu": [
     {
