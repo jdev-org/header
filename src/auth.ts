@@ -8,6 +8,7 @@ interface WhoAmIResponse {
     firstName: string
     lastName: string
     ldapWarn: boolean
+    isExternalAuth: boolean
     ldapRemainingDays: string
   }
 }
@@ -19,6 +20,7 @@ export interface User {
   anonymous: boolean
   warned: boolean
   remainingDays: string
+  isExternalAuth?: boolean
   roles: string[]
 }
 
@@ -45,6 +47,7 @@ export async function getUserDetails(): Promise<User> {
       remainingDays: user.ldapRemainingDays,
       anonymous: user.roles.includes('ROLE_ANONYMOUS'),
       roles: user.roles,
+      isExternalAuth: user.isExternalAuth,
     }
   } catch (error) {
     console.warn('[getUserDetails] Fail get user, fallback anonymous :', error)
@@ -55,6 +58,7 @@ export async function getUserDetails(): Promise<User> {
       remainingDays: '0',
       anonymous: true,
       roles: ['ROLE_ANONYMOUS'],
+      isExternalAuth: false,
     }
   }
 }

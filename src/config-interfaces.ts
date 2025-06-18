@@ -52,4 +52,6 @@ export interface Config {
   login: { url: string; params?: Array<{ [key: string]: string }> }
   //Logout URL to redirect to
   logoutUrl: string
+  //Use it if you want a different logout URL for external authentication providers
+  logoutExternalUrl?: string
 }

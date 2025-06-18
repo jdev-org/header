@@ -44,7 +44,13 @@ const loginUrl = computed(() => {
   }
   return href.toString()
 })
-const logoutUrl = computed(() => replaceUrlsVariables(state.config.logoutUrl))
+const logoutUrl = computed(() =>
+  replaceUrlsVariables(
+    state.user?.isExternalAuth
+      ? state.config.logoutExternalUrl
+      : state.config.logoutUrl
+  )
+)
 
 function checkCondition(item: Link | Separator | Dropdown): boolean {
   const hasRole = item.hasRole
@@ -60,7 +66,7 @@ function checkCondition(item: Link | Separator | Dropdown): boolean {
   return hasRole.split(',').some(c => state.user?.roles?.indexOf(c) !== -1)
 }
 
-function replaceUrlsVariables(url: string): string {
+function replaceUrlsVariables(url: string = ''): string {
   return url
     .replace(/:lang3/, state.lang3)
     .replace(/:origin/, encodeURI(window.location.origin))
@@ -68,13 +74,13 @@ function replaceUrlsVariables(url: string): string {
 }
 
 function determineActiveApp(): void {
-  const tmp = allNodes(state.menu, 'activeAppUrl')
+  const allLinks = allNodes(state.menu, 'activeAppUrl')
   const computedUrl = window.location.href.substring(
     window.location.origin.length,
     window.location.href.length
   )
   let matched: boolean
-  for (const link of tmp) {
+  for (const link of allLinks) {
     matched = false
     const activeAppUrlSplitted = link.split(':')
     const base =
@@ -127,6 +133,7 @@ function setI18nAndActiveApp(i18n?: any) {
     i18n || {},
     state.config.lang || navigator.language.substring(0, 2) || 'en'
   )
+  state.config.logoutExternalUrl ??= state.config.logoutUrl
   determineActiveApp()
   state.loaded = true
 }
@@ -502,7 +509,7 @@ onMounted(() => {
   }
 
   .nav-item {
-    @apply relative w-fit block after:hover:scale-x-100 lg:mx-3 md:mx-2 hover:text-black first-letter:capitalize text-base;
+    @apply relative text-lg w-fit block after:hover:scale-x-100 lg:mx-3 md:mx-2 hover:text-black first-letter:capitalize text-base;
   }
 
   .nav-item:after {
