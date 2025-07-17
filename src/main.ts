@@ -1,5 +1,6 @@
 import { defineCustomElement } from 'vue'
 import Header from './header.ce.vue'
 
-const HeaderCE = defineCustomElement(Header)
+const nonce = document.currentScript?.nonce
+const HeaderCE = defineCustomElement(Header, { nonce })
 customElements.define('geor-header', HeaderCE)

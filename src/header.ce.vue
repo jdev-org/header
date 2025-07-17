@@ -17,6 +17,7 @@ const props = defineProps<{
   legacyHeader?: string
   legacyUrl?: string
   logoUrl?: string
+  customNonce?: string
 }>()
 
 const state = reactive({
@@ -167,23 +168,16 @@ onMounted(() => {
   >
     <link
       rel="stylesheet"
-      :href="props.stylesheet || state.config.stylesheet"
-      v-if="props.stylesheet || state.config.stylesheet"
+      :href="state.config.stylesheet"
+      v-if="state.config.stylesheet"
+      :nonce="props.customNonce"
     />
     <link
       rel="stylesheet"
       :href="state.config.iconsUrl"
       v-if="state.config.iconsUrl"
+      :nonce="props.customNonce"
     />
-    <component
-      :is="'style'"
-      v-if="!props.stylesheet && !state.config.stylesheet"
-    >
-      header { --georchestra-header-primary: #85127e;
-      --georchestra-header-secondary: #1b1f3b;
-      --georchestra-header-primary-light: #85127e1a;
-      --georchestra-header-secondary-light: #1b1f3b1a; }
-    </component>
     <div
       class="justify-between text-slate-600 md:flex hidden h-full bg-white md:text-sm"
     >
@@ -484,6 +478,14 @@ onMounted(() => {
 }
 
 @layer components {
+  @layer colors {
+    header {
+      --georchestra-header-primary: #85127e;
+      --georchestra-header-secondary: #1b1f3b;
+      --georchestra-header-primary-light: #85127e1a;
+      --georchestra-header-secondary-light: #1b1f3b1a;
+    }
+  }
   .nav-item-mobile {
     @apply text-xl block text-center py-3 w-full border-b border-b-slate-300 first-letter:capitalize;
     display: flex;
