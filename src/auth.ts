@@ -23,29 +23,40 @@ export interface User {
 }
 
 export async function getUserDetails(): Promise<User> {
-  return fetch(AUTH_API_URL)
-    .then(response => response.json())
-    .then((json: WhoAmIResponse) => {
-      const user = json.GeorchestraUser
-      if (!user) {
-        return {
-          username: 'anonymousUser',
-          warned: false,
-          remainingDays: '0',
-          anonymous: true,
-          roles: ['ROLE_ANONYMOUS'],
-        }
-      }
-      return {
-        username: user.username,
-        firstname: user.firstName,
-        lastname: user.lastName,
-        warned: user.ldapWarn,
-        remainingDays: user.ldapRemainingDays,
-        anonymous: user.roles.indexOf('ROLE_ANONYMOUS') > -1,
-        roles: user.roles,
-      }
-    })
+  try {
+    const response = await fetch(AUTH_API_URL)
+
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status}`)
+    }
+
+    const json: WhoAmIResponse = await response.json()
+    const user = json.GeorchestraUser
+
+    if (!user) {
+      throw new Error('Missing GeorchestraUser')
+    }
+
+    return {
+      username: user.username,
+      firstname: user.firstName,
+      lastname: user.lastName,
+      warned: user.ldapWarn,
+      remainingDays: user.ldapRemainingDays,
+      anonymous: user.roles.includes('ROLE_ANONYMOUS'),
+      roles: user.roles,
+    }
+  } catch (error) {
+    console.warn('[getUserDetails] Fail get user, fallback anonymous :', error)
+
+    return {
+      username: 'anonymousUser',
+      warned: false,
+      remainingDays: '0',
+      anonymous: true,
+      roles: ['ROLE_ANONYMOUS'],
+    }
+  }
 }
 
 export interface PlatformInfos {
