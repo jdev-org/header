@@ -4,6 +4,8 @@ interface MenuItem {
   hasRole?: string
   //Role which hides the item
   blockedRole?: string
+  //If the item is hidden in mobile mode
+  hideMobile?: boolean
 }
 
 export interface Link extends MenuItem {

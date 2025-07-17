@@ -45,6 +45,9 @@ const logoutUrl = computed(() => '/logout')
 
 function checkCondition(item: Link | Separator | Dropdown): boolean {
   const hasRole = item.hasRole
+  const hideMobile = item.hideMobile
+  const isMobile = window.innerWidth < 768
+  if (hideMobile && isMobile) return false
   if (!state.user) return false
   if (!hasRole) return true
   const isBlocked = item.blockedRole
