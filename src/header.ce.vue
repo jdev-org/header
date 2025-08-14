@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive } from 'vue'
+import { computed, onMounted } from 'vue'
 import { getUserDetails } from './auth'
-import type { User } from './auth'
-import UserIcon from './ui/UserIcon.vue'
-import GeorchestraLogo from '@/ui/GeorchestraLogo.vue'
-import ChevronDownIcon from '@/ui/ChevronDownIcon.vue'
 import { getI18n, t } from '@/i18n'
-import type { Link, Separator, Dropdown, Config } from '@/config-interfaces'
-import { defaultMenu, defaultConfig } from '@/default-config.json'
+import GeorchestraLogo from '@/ui/GeorchestraLogo.vue'
+import { state, replaceUrlsVariables } from '@/shared'
+import { allNodes } from '@/utils'
+import Menu from '@/ui/Menu.vue'
+import MobileMenu from '@/ui/MobileMenu.vue'
 
 const props = defineProps<{
   activeApp?: string
@@ -19,18 +18,6 @@ const props = defineProps<{
   logoUrl?: string
   customNonce?: string
 }>()
-
-const state = reactive({
-  user: null as null | User,
-  mobileMenuOpen: false,
-  menu: defaultMenu as (Link | Separator | Dropdown)[],
-  config: defaultConfig as Config,
-  lang3: 'eng',
-  loaded: false,
-  matchedRouteScore: 0,
-  activeAppUrl: '' as string | undefined,
-  activeDropdown: null as null | number,
-})
 
 const isAnonymous = computed(() => !state.user || state.user.anonymous)
 const isWarned = computed(() => state.user?.warned)
@@ -45,40 +32,11 @@ const loginUrl = computed(() => {
 })
 const logoutUrl = computed(() =>
   replaceUrlsVariables(
-    state.user?.isExternalAuth
+    state.user?.isExternalAuth && state.config.logoutExternalUrl
       ? state.config.logoutExternalUrl
       : state.config.logoutUrl
   )
 )
-
-function checkCondition(item: Link | Separator | Dropdown): boolean {
-  const rolesAllowed = item.hasRole
-  const hideMobile = item.hideMobile
-  const isMobile = window.innerWidth < 768
-  if (hideMobile && isMobile) return false
-  if (!state.user) return false
-  if (!rolesAllowed) return true
-  const isBlocked = item.blockedRole
-    ?.split(',')
-    .some(c => state.user?.roles?.indexOf(c) !== -1)
-  if (isBlocked) return false
-  return rolesAllowed
-    .split(',')
-    .some(rolePattern =>
-      rolePattern.endsWith('*')
-        ? state.user?.roles?.some(userRole =>
-            userRole.startsWith(rolePattern.slice(0, -1))
-          )
-        : state.user?.roles?.includes(rolePattern)
-    )
-}
-
-function replaceUrlsVariables(url: string = ''): string {
-  return url
-    .replace(/:lang3/, state.lang3)
-    .replace(/:origin/, encodeURI(window.location.origin))
-    .replace(/:currentUrl/, encodeURI(window.location.href))
-}
 
 function determineActiveApp(): void {
   const allLinks = allNodes(state.menu, 'activeAppUrl')
@@ -121,20 +79,6 @@ function determineActiveApp(): void {
   }
 }
 
-function allNodes(obj: any, key: string, array?: any[]): string[] {
-  array = array || []
-  if ('object' === typeof obj) {
-    for (let k in obj) {
-      if (k === key) {
-        array.push(obj[k])
-      } else {
-        allNodes(obj[k], key, array)
-      }
-    }
-  }
-  return array
-}
-
 function setI18nAndActiveApp(i18n?: any) {
   state.lang3 = getI18n(
     i18n || {},
@@ -143,10 +87,6 @@ function setI18nAndActiveApp(i18n?: any) {
   state.config.logoutExternalUrl ??= state.config.logoutUrl
   determineActiveApp()
   state.loaded = true
-}
-
-function toggleDropdown(index: number) {
-  state.activeDropdown = state.activeDropdown === index ? null : index
 }
 
 onMounted(() => {
@@ -182,6 +122,7 @@ onMounted(() => {
   <header
     v-else-if="state.loaded"
     class="host h-[80px] text-base"
+    :class="{ 'has-custom-stylesheet': state.config.stylesheet }"
     :style="`height:${props.height}px`"
   >
     <link
@@ -215,94 +156,7 @@ onMounted(() => {
           </template>
         </a>
         <nav class="flex justify-center items-center font-semibold header-nav">
-          <template v-for="(item, index) in state.menu" :key="index">
-            <template v-if="!item.type && checkCondition(item)">
-              <a
-                :href="(item as Link).url"
-                class="nav-item"
-                @click="state.activeAppUrl = (item as Link).activeAppUrl"
-                :class="{
-                  active: (item as Link).activeAppUrl == state.activeAppUrl,
-                  disabled: (item as Link).disabled
-                }"
-              >
-                <div class="flex items-center">
-                  <i
-                    v-if="(item as Link).icon"
-                    :class="(item as Link).icon"
-                    class="item-icon"
-                    style="font-size: 0.9rem"
-                  ></i>
-                  <span class="ml-1 first-letter:capitalize">
-                    {{
-                      (item as Link).i18n
-                        ? t((item as Link).i18n)
-                        : (item as Link).label
-                    }}
-                  </span>
-                </div>
-              </a>
-            </template>
-            <template
-              v-else-if="(item as Separator).type === 'separator' && checkCondition(item)"
-            >
-              <span class="text-gray-400">|</span>
-            </template>
-            <template
-              v-else-if="item.type === 'dropdown' && checkCondition(item)"
-            >
-              <div class="group inline-block relative">
-                <button
-                  class="nav-item after:hover:scale-x-0 flex items-center"
-                >
-                  <span class="lg:mr-2 md:mr-1 first-letter:capitalize">{{
-                    (item as Dropdown).i18n
-                      ? t((item as Dropdown).i18n)
-                      : (item as Dropdown).label
-                  }}</span>
-                  <ChevronDownIcon
-                    class="w-4 h-4"
-                    stroke-width="4"
-                  ></ChevronDownIcon>
-                </button>
-                <ul
-                  class="absolute hidden group-hover:flex flex-col w-max border rounded dropdown z-[1002] bg-white"
-                >
-                  <template
-                    v-for="(subitem, subindex) in (item as Dropdown).items"
-                    :key="subindex"
-                  >
-                    <li
-                      v-if="checkCondition(subitem)"
-                      @click="
-                        state.activeAppUrl = (subitem as Link).activeAppUrl
-                      "
-                      :class="{
-                        active: (subitem as Link).activeAppUrl == state.activeAppUrl,
-                        disabled: (subitem as Link).disabled
-                      }"
-                      class="px-4"
-                    >
-                      <a
-                        :href="replaceUrlsVariables(subitem.url)"
-                        class="capitalize !flex justify-center items-center"
-                      >
-                        <i
-                          v-if="subitem.icon"
-                          :class="subitem.icon"
-                          class="pr-1 block pb-[2px] subitem-icon"
-                          style="font-size: 1rem"
-                        ></i>
-                        <span class="block">{{
-                          subitem.i18n ? t(subitem.i18n) : subitem.label
-                        }}</span>
-                      </a>
-                    </li>
-                  </template>
-                </ul>
-              </div>
-            </template>
-          </template>
+          <Menu :menu="state.menu" />
 
           <span class="text-gray-400 text-xs" v-if="isWarned">
             <a href="/console/account/changePassword">
@@ -399,84 +253,7 @@ onMounted(() => {
         class="absolute z-[1000] bg-white w-full duration-300 transition-opacity ease-in-out"
       >
         <nav class="flex flex-col font-semibold" v-if="state.mobileMenuOpen">
-          <template v-for="(item, index) in state.menu" :key="index">
-            <template v-if="!item.type && checkCondition(item)">
-              <a
-                :href="(item as Link).url"
-                class="nav-item-mobile"
-                @click="state.activeAppUrl = (item as Link).activeAppUrl"
-                :class="{
-                  active: (item as Link).activeAppUrl == state.activeAppUrl,
-                  disabled: (item as Link).disabled
-                }"
-              >
-                <div class="flex items-center">
-                  <span class="ml-1 first-letter:capitalize">
-                    {{
-                      (item as Link).i18n
-                        ? t((item as Link).i18n)
-                        : (item as Link).label
-                    }}
-                  </span>
-                </div>
-              </a>
-            </template>
-            <template
-              v-else-if="item.type === 'dropdown' && checkCondition(item)"
-            >
-              <div class="group inline-block relative">
-                <button
-                  class="nav-item-mobile after:hover:scale-x-0 flex items-center"
-                  @click="toggleDropdown(index)"
-                >
-                  <span class="lg:mr-2 md:mr-1 first-letter:capitalize">{{
-                    (item as Dropdown).i18n
-                      ? t((item as Dropdown).i18n)
-                      : (item as Dropdown).label
-                  }}</span>
-                  <ChevronDownIcon
-                    class="w-4 h-4"
-                    stroke-width="4"
-                  ></ChevronDownIcon>
-                </button>
-                <ul
-                  class="absolute border rounded w-full dropdown z-[1002] bg-white"
-                  v-show="state.activeDropdown === index"
-                >
-                  <template
-                    v-for="(subitem, subindex) in (item as Dropdown).items"
-                    :key="subindex"
-                  >
-                    <li
-                      v-if="checkCondition(subitem)"
-                      @click="
-                        state.activeAppUrl = (subitem as Link).activeAppUrl
-                      "
-                      :class="{
-                        active: (subitem as Link).activeAppUrl == state.activeAppUrl,
-                        disabled: (subitem as Link).disabled
-                      }"
-                    >
-                      <a
-                        :href="replaceUrlsVariables(subitem.url)"
-                        class="capitalize !flex justify-center items-center"
-                      >
-                        <i
-                          v-if="subitem.icon"
-                          :class="subitem.icon"
-                          class="pr-1 block pb-[2px] subitem-icon"
-                          style="font-size: 1rem"
-                        ></i>
-                        <span class="block">{{
-                          subitem.i18n ? t(subitem.i18n) : subitem.label
-                        }}</span>
-                      </a>
-                    </li>
-                  </template>
-                </ul>
-              </div>
-            </template>
-          </template>
+          <MobileMenu :menu="state.menu" />
         </nav>
       </div>
     </div>
@@ -498,7 +275,7 @@ onMounted(() => {
 
 @layer components {
   @layer colors {
-    header {
+    header:not(.has-custom-stylesheet) {
       --georchestra-header-primary: #85127e;
       --georchestra-header-primary-light: #85127e1a;
     }

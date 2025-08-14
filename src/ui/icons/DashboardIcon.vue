@@ -1,0 +1,19 @@
+<template>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="56px"
+    height="56px"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <circle cx="12" cy="9" r="3" stroke="currentColor" stroke-width="1.5" />
+    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" />
+    <path
+      d="M17.9691 20C17.81 17.1085 16.9247 15 11.9999 15C7.07521 15 6.18991 17.1085 6.03076 20"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+    />
+  </svg>
+</template>
+<script setup lang="ts"></script>
