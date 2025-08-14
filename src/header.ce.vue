@@ -52,17 +52,25 @@ const logoutUrl = computed(() =>
 )
 
 function checkCondition(item: Link | Separator | Dropdown): boolean {
-  const hasRole = item.hasRole
+  const rolesAllowed = item.hasRole
   const hideMobile = item.hideMobile
   const isMobile = window.innerWidth < 768
   if (hideMobile && isMobile) return false
   if (!state.user) return false
-  if (!hasRole) return true
+  if (!rolesAllowed) return true
   const isBlocked = item.blockedRole
     ?.split(',')
     .some(c => state.user?.roles?.indexOf(c) !== -1)
   if (isBlocked) return false
-  return hasRole.split(',').some(c => state.user?.roles?.indexOf(c) !== -1)
+  return rolesAllowed
+    .split(',')
+    .some(rolePattern =>
+      rolePattern.endsWith('*')
+        ? state.user?.roles?.some(userRole =>
+            userRole.startsWith(rolePattern.slice(0, -1))
+          )
+        : state.user?.roles?.includes(rolePattern)
+    )
 }
 
 function replaceUrlsVariables(url: string = ''): string {

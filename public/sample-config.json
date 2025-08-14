@@ -53,6 +53,13 @@
           "disabled": true
         }
       ]
+    },
+    {
+      "label": "Superset admin stuff",
+      "url": "/superset",
+      "activeAppUrl": "/superset",
+      "hasRole": "ROLE_SUPERUSER,ROLE_SUPERSET_*",
+      "icon": "iconoir-graph-up"
     }
   ],
   "i18n": {

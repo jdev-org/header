@@ -1,6 +1,6 @@
 interface MenuItem {
   type?: string
-  //Role required to display the item
+  //Role required to display the item, can end with a star to match prefixed roles (e.g. ROLE_SUPERSET_*)
   hasRole?: string
   //Role which hides the item
   blockedRole?: string
