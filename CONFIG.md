@@ -67,3 +67,40 @@ In addition to translations set in [./src/i18n/](./src/i18n/), you can add custo
   }
 }
 ```
+
+## Url Variables
+
+You can set some variables in some urls in the configuration file.
+
+You can set variables in: 
+- `login.url`
+- Each value of `login.params` iterable
+- `logoutUrl`
+- item's `url` in the menu
+- `logoutExternalUrl`
+
+:warning: `loginUrl` go through `new URL()` and so, must be a valid URL starting with `http://` or `https://`. 
+So the configuration will probably always start with `:origin` variable defined below.
+
+All variables are available [in the `replaceUrlsVariables()` function](./src/header.ce.vue#L65).
+Variables are:
+
+| Name | Description                                                                                |
+|------|--------------------------------------------------------------------------------------------|
+| `:lang3` | Replaced with the alpha-3 country code                                                     |
+| `:origin` | Replaced with `window.location.origin`. Example: `https://www.mywebsite.com/`              |
+| `:currentUrl` | Replaced with `window.location.href`. Example: `https://www.mywebsite.com/mapstore/#/home` |
+
+## Login.url when using CAS
+
+Login URL when using CAS must be set to 
+```json
+    "login": {
+      "url": "/cas/login",
+      "params": [
+        {"service": ":currentUrl"}
+      ]
+    },
+```
+in order to work properly.
+
