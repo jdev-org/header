@@ -1,5 +1,4 @@
 const AUTH_API_URL = '/whoami'
-const CONSOLE_PLATFORM_API_URL = '/console/private/platform/infos'
 
 interface WhoAmIResponse {
   GeorchestraUser: {
@@ -61,22 +60,4 @@ export async function getUserDetails(): Promise<User> {
       isExternalAuth: false,
     }
   }
-}
-
-export interface PlatformInfos {
-  analyticsEnabled: boolean
-  extractorappEnabled: boolean
-  saslEnabled: boolean
-}
-
-export async function getPlatformInfos(): Promise<PlatformInfos> {
-  return fetch(CONSOLE_PLATFORM_API_URL)
-    .then(response => response.json())
-    .then((json: PlatformInfos) => {
-      return {
-        analyticsEnabled: json.analyticsEnabled,
-        extractorappEnabled: json.extractorappEnabled,
-        saslEnabled: json.saslEnabled,
-      }
-    })
 }

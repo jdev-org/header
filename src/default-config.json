@@ -1,14 +1,6 @@
 {
   "defaultConfig": {
     "hideLogin": false,
-    "adminRoles": [
-      "ROLE_SUPERUSER",
-      "ROLE_ORGADMIN",
-      "ROLE_GN_ADMIN",
-      "ROLE_GN_REVIEWER",
-      "ROLE_GN_EDITOR",
-      "ROLE_MAPSTORE_ADMIN"
-    ],
     "login": {
       "url": ":origin/login",
       "params": [

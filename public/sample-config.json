@@ -1,7 +1,7 @@
 {
   "config": {
     "stylesheet": "/public/georchestra.css",
-    "logoUrl": "/public/logo-mel.jpg",
+    "logoUrl": "/public/logoipsum-385.svg",
     "hideLogin": false,
     "iconsUrl": "https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css",
     "lang": "fr",
@@ -53,6 +53,13 @@
           "disabled": true
         }
       ]
+    },
+    {
+      "label": "Superset admin stuff",
+      "url": "/superset",
+      "activeAppUrl": "/superset",
+      "hasRole": "ROLE_SUPERUSER,ROLE_SUPERSET_*",
+      "icon": "iconoir-graph-up"
     }
   ],
   "i18n": {

@@ -1,6 +1,6 @@
 interface MenuItem {
   type?: string
-  //Role required to display the item
+  //Role required to display the item, can end with a star to match prefixed roles (e.g. ROLE_SUPERSET_*)
   hasRole?: string
   //Role which hides the item
   blockedRole?: string
@@ -46,8 +46,6 @@ export interface Config {
   iconsUrl?: string
   //Force header's language
   lang?: string
-  //List of roles considered as admin roles, if admin, triggers a request to /console/private/platform/infos
-  adminRoles: string[]
   //Login URL to redirect to
   login: { url: string; params?: Array<{ [key: string]: string }> }
   //Logout URL to redirect to
