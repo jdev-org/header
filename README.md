@@ -50,9 +50,7 @@ Example :
 /* Example of custom stylesheet */
 header {
   --georchestra-header-primary: #e20714;
-  --georchestra-header-secondary: #333;
   --georchestra-header-primary-light: white;
-  --georchestra-header-secondary-light: #eee;
 }
 .admin-dropdown > li.active {
   background-color: red;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive } from 'vue'
-import { getUserDetails, getPlatformInfos } from './auth'
-import type { User, PlatformInfos } from './auth'
+import { getUserDetails } from './auth'
+import type { User } from './auth'
 import UserIcon from './ui/UserIcon.vue'
 import GeorchestraLogo from '@/ui/GeorchestraLogo.vue'
 import ChevronDownIcon from '@/ui/ChevronDownIcon.vue'
@@ -23,7 +23,6 @@ const props = defineProps<{
 const state = reactive({
   user: null as null | User,
   mobileMenuOpen: false,
-  platformInfos: null as null | PlatformInfos,
   menu: defaultMenu as (Link | Separator | Dropdown)[],
   config: defaultConfig as Config,
   lang3: 'eng',
@@ -158,11 +157,6 @@ onMounted(() => {
             setI18nAndActiveApp(json.i18n)
           })
       else setI18nAndActiveApp()
-      if (user.roles.some(role => state.config.adminRoles.includes(role))) {
-        getPlatformInfos().then(
-          platformInfos => (state.platformInfos = platformInfos)
-        )
-      }
     })
   }
 })
@@ -497,9 +491,7 @@ onMounted(() => {
   @layer colors {
     header {
       --georchestra-header-primary: #85127e;
-      --georchestra-header-secondary: #1b1f3b;
       --georchestra-header-primary-light: #85127e1a;
-      --georchestra-header-secondary-light: #1b1f3b1a;
     }
   }
   .nav-item-mobile {

@@ -1,7 +1,7 @@
 {
   "config": {
     "stylesheet": "/public/georchestra.css",
-    "logoUrl": "/public/logo-mel.jpg",
+    "logoUrl": "/public/logoipsum-385.svg",
     "hideLogin": false,
     "iconsUrl": "https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css",
     "lang": "fr",
