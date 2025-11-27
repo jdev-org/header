@@ -2,9 +2,9 @@
   "defaultConfig": {
     "hideLogin": false,
     "login": {
-      "url": ":origin/login",
+      "url": ":currentUrl",
       "params": [
-        {"redirect": ":currentUrl"}
+        {"login": ""}
       ]
     },
     "logoutUrl": "/logout"
