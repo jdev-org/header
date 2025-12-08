@@ -266,7 +266,7 @@ onMounted(() => {
                   ></ChevronDownIcon>
                 </button>
                 <ul
-                  class="absolute hidden group-hover:block border rounded w-full dropdown z-[1002] bg-white"
+                  class="absolute hidden group-hover:flex flex-col w-max border rounded dropdown z-[1002] bg-white"
                 >
                   <template
                     v-for="(subitem, subindex) in (item as Dropdown).items"
@@ -281,6 +281,7 @@ onMounted(() => {
                         active: (subitem as Link).activeAppUrl == state.activeAppUrl,
                         disabled: (subitem as Link).disabled
                       }"
+                      class="px-4"
                     >
                       <a
                         :href="replaceUrlsVariables(subitem.url)"
