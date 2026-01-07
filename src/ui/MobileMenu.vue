@@ -1,19 +1,16 @@
 <script setup lang="ts">
-import {
-  checkCondition,
-  getItemSelectedTitle,
-  replaceUrlsVariables,
-  state,
-} from '@/shared'
+import { checkCondition, replaceUrlsVariables, state } from '@/shared'
 import type { Dropdown, Link, Separator } from '@/config-interfaces'
-import DropdownItem from '@/ui/DropdownItem.vue'
-import LinkItem from '@/ui/LinkItem.vue'
 import { t } from '@/i18n'
 import ChevronDownIcon from '@/ui/icons/ChevronDownIcon.vue'
 
 const props = defineProps<{
   menu: (Link | Separator | Dropdown)[]
 }>()
+
+function toggleDropdown(index: number) {
+  state.activeDropdown = state.activeDropdown === index ? null : index
+}
 </script>
 <template>
   <template v-for="(item, index) in props.menu" :key="index">

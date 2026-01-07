@@ -2,13 +2,14 @@
 import { computed, onMounted } from 'vue'
 import { getUserDetails } from './auth'
 import { getI18n, t } from '@/i18n'
-import GeorchestraLogo from '@/ui/GeorchestraLogo.vue'
 import { state, replaceUrlsVariables } from '@/shared'
 import { allNodes } from '@/utils'
 import Menu from '@/ui/Menu.vue'
 import MobileMenu from '@/ui/MobileMenu.vue'
 import UserIcon from './ui/icons/UserIcon.vue'
 import AccountItem from '@/ui/AccountItem.vue'
+import Logo from '@/ui/Logo.vue'
+import BurgerIcon from '@/ui/icons/BurgerIcon.vue'
 
 const props = defineProps<{
   activeApp?: string
@@ -147,15 +148,7 @@ onMounted(() => {
           href="/"
           class="flex justify-center items-center lg:px-3 md:px-2 py-2"
         >
-          <img
-            v-if="props.logoUrl || state.config.logoUrl"
-            :src="props.logoUrl || state.config.logoUrl"
-            alt="geOrchestra logo"
-            class="w-32"
-          />
-          <template v-else>
-            <GeorchestraLogo class="w-full h-12 my-auto"></GeorchestraLogo>
-          </template>
+          <Logo :logoUrl="props.logoUrl || state.config.logoUrl" />
         </a>
         <nav class="flex justify-center items-center font-semibold header-nav">
           <Menu :menu="state.menu" />
@@ -183,55 +176,18 @@ onMounted(() => {
       >
         <div class="grow flex justify-start items-center py-3">
           <span class="inline-flex items-center rounded-full">
-            <button
-              type="button"
-              @click="state.mobileMenuOpen = !state.mobileMenuOpen"
-            >
-              <svg
-                v-if="state.mobileMenuOpen"
-                xmlns="http://www.w3.org/2000/svg"
-                height="24"
-                viewBox="0 -960 960 960"
-                width="24"
-              >
-                <path
-                  d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-                />
-              </svg>
-              <svg
-                v-else
-                xmlns="http://www.w3.org/2000/svg"
-                height="24"
-                viewBox="0 -960 960 960"
-                width="24"
-              >
-                <path
-                  d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"
-                />
-              </svg>
-            </button>
+            <BurgerIcon />
             <a href="/" class="block ml-3">
-              <img
-                v-if="props.logoUrl || state.config.logoUrl"
-                :src="props.logoUrl || state.config.logoUrl"
-                alt="geOrchestra logo"
-                class="w-24"
-              />
-              <GeorchestraLogo v-else></GeorchestraLogo>
+              <Logo :logoUrl="props.logoUrl || state.config.logoUrl" />
             </a>
           </span>
         </div>
         <div class="flex justify-center items-center">
-          <div v-if="!isAnonymous" class="flex gap-4 items-baseline">
-            <a class="link-btn" href="/console/account/userdetails">
-              <UserIcon class="font-bold text-3xl inline-block mr-4"></UserIcon>
-              <span>{{
-                `${state.user?.firstname} ${state.user?.lastname}`
-              }}</span></a
-            >
-            <a class="link-btn" :href="logoutUrl">{{ t('logout') }}</a>
-          </div>
-          <a v-else class="btn" :href="loginUrl">{{ t('login') }}</a>
+          <AccountItem
+            :is-anonymous="isAnonymous"
+            :login-url="loginUrl"
+            :logout-url="logoutUrl"
+          />
         </div>
       </div>
 
@@ -273,7 +229,7 @@ onMounted(() => {
   }
 
   .nav-item {
-    @apply relative text-lg w-fit block after:hover:scale-x-100 lg:mx-3 md:mx-2 hover:text-black first-letter:capitalize text-base;
+    @apply relative w-fit block after:hover:scale-x-100 xl:mx-3 md:mx-2 hover:text-black first-letter:capitalize text-base;
   }
 
   .nav-item:after {
