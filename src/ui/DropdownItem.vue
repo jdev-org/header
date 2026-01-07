@@ -32,7 +32,7 @@ const props = defineProps<{
       ></ChevronDownIcon>
     </button>
     <div
-      class="absolute flex flex-col w-max z-[1002] opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none group-hover:pointer-events-auto"
+      class="absolute flex flex-col min-w-full w-max z-[1002] opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none group-hover:pointer-events-auto"
     >
       <ul class="border rounded dropdown bg-white mt-3">
         <template

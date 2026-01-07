@@ -52,4 +52,6 @@ export interface Config {
   logoutUrl: string
   //Use it if you want a different logout URL for external authentication providers
   logoutExternalUrl?: string
+  //Menu items to display in the header
+  displayFullnameInAccountBtn?: boolean
 }

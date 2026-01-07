@@ -7,6 +7,8 @@ import { state, replaceUrlsVariables } from '@/shared'
 import { allNodes } from '@/utils'
 import Menu from '@/ui/Menu.vue'
 import MobileMenu from '@/ui/MobileMenu.vue'
+import UserIcon from './ui/icons/UserIcon.vue'
+import AccountItem from '@/ui/AccountItem.vue'
 
 const props = defineProps<{
   activeApp?: string
@@ -167,28 +169,12 @@ onMounted(() => {
           >
         </nav>
       </div>
-      <div class="flex justify-center items-center mx-6 header-right">
-        <div v-if="!isAnonymous" class="flex gap-4 items-baseline">
-          <a
-            class="link-btn"
-            href="/console/account/userdetails"
-            :title="`${state.user?.firstname} ${state.user?.lastname}`"
-          >
-            <UserIcon class="font-bold text-3xl inline-block"></UserIcon>
-            <span class="text-xs max-w-[120px] truncate">{{
-              `${state.user?.firstname} ${state.user?.lastname}`
-            }}</span></a
-          >
-          <a class="link-btn" :href="logoutUrl"
-            ><span class="first-letter:capitalize">{{ t('logout') }}</span></a
-          >
-        </div>
-        <a
-          v-if="!state.config.hideLogin && isAnonymous"
-          class="btn"
-          :href="loginUrl"
-          >{{ t('login') }}</a
-        >
+      <div class="flex justify-center items-center mx-2 xl:mx-6 header-right">
+        <AccountItem
+          :is-anonymous="isAnonymous"
+          :login-url="loginUrl"
+          :logout-url="logoutUrl"
+        />
       </div>
     </div>
     <div class="flex-col md:hidden w-full h-full">
