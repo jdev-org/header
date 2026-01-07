@@ -144,12 +144,7 @@ onMounted(() => {
       class="justify-between text-slate-600 md:flex hidden h-full bg-white md:text-sm"
     >
       <div class="flex header-left">
-        <a
-          href="/"
-          class="flex justify-center items-center lg:px-3 md:px-2 py-2"
-        >
-          <Logo :logoUrl="props.logoUrl || state.config.logoUrl" />
-        </a>
+        <Logo :logoUrl="props.logoUrl || state.config.logoUrl" />
         <nav class="flex justify-center items-center font-semibold header-nav">
           <Menu :menu="state.menu" />
 
@@ -162,33 +157,27 @@ onMounted(() => {
           >
         </nav>
       </div>
-      <div class="flex justify-center items-center mx-2 xl:mx-6 header-right">
+      <AccountItem
+        :is-anonymous="isAnonymous"
+        :login-url="loginUrl"
+        :logout-url="logoutUrl"
+      />
+    </div>
+    <div class="flex-col md:hidden w-full h-full">
+      <div
+        class="h-full inline-flex items-center justify-start align-middle px-4 py-6 shrink-0 w-full bg-primary/10"
+      >
+        <div class="grow flex justify-start items-center py-3">
+          <span class="inline-flex items-center rounded-full">
+            <BurgerIcon class="mr-3" />
+            <Logo :logoUrl="props.logoUrl || state.config.logoUrl" />
+          </span>
+        </div>
         <AccountItem
           :is-anonymous="isAnonymous"
           :login-url="loginUrl"
           :logout-url="logoutUrl"
         />
-      </div>
-    </div>
-    <div class="flex-col md:hidden w-full h-full">
-      <div
-        class="h-full inline-flex items-center justify-start align-middle px-6 py-8 shrink-0 w-full bg-primary/10"
-      >
-        <div class="grow flex justify-start items-center py-3">
-          <span class="inline-flex items-center rounded-full">
-            <BurgerIcon />
-            <a href="/" class="block ml-3">
-              <Logo :logoUrl="props.logoUrl || state.config.logoUrl" />
-            </a>
-          </span>
-        </div>
-        <div class="flex justify-center items-center">
-          <AccountItem
-            :is-anonymous="isAnonymous"
-            :login-url="loginUrl"
-            :logout-url="logoutUrl"
-          />
-        </div>
       </div>
 
       <div
