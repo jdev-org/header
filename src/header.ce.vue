@@ -5,8 +5,6 @@ import { getI18n, t } from '@/i18n'
 import { state, replaceUrlsVariables } from '@/shared'
 import { allNodes } from '@/utils'
 import Menu from '@/ui/Menu.vue'
-import MobileMenu from '@/ui/MobileMenu.vue'
-import UserIcon from './ui/icons/UserIcon.vue'
 import AccountItem from '@/ui/AccountItem.vue'
 import Logo from '@/ui/Logo.vue'
 import BurgerIcon from '@/ui/icons/BurgerIcon.vue'
@@ -146,7 +144,7 @@ onMounted(() => {
       <div class="flex header-left">
         <Logo :logoUrl="props.logoUrl || state.config.logoUrl" />
         <nav class="flex justify-center items-center font-semibold header-nav">
-          <Menu :menu="state.menu" />
+          <Menu />
 
           <span class="text-gray-400 text-xs" v-if="isWarned">
             <a href="/console/account/changePassword">
@@ -184,7 +182,7 @@ onMounted(() => {
         class="absolute z-[1000] bg-white w-full duration-300 transition-opacity ease-in-out"
       >
         <nav class="flex flex-col font-semibold" v-if="state.mobileMenuOpen">
-          <MobileMenu :menu="state.menu" />
+          <Menu />
         </nav>
       </div>
     </div>

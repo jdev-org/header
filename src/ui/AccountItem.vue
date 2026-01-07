@@ -40,7 +40,7 @@ const props = defineProps<{
               {{ state.user?.lastname }}
             </span>
           </div>
-          <ul class="dropdown">
+          <ul class="dropdown font-semibold">
             <li class="px-4 transition-colors duration-150">
               <a
                 class="first-letter:capitalize"
