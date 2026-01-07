@@ -26,9 +26,14 @@ const props = defineProps<{
       <span v-else class="lg:mr-2 md:mr-1 first-letter:capitalize">{{
         props.item.i18n ? t(props.item.i18n) : props.item.label
       }}</span>
-      <ChevronDownIcon class="w-4 h-4" stroke-width="4"></ChevronDownIcon>
+      <ChevronDownIcon
+        class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180"
+        stroke-width="4"
+      ></ChevronDownIcon>
     </button>
-    <div class="absolute hidden group-hover:flex flex-col w-max z-[1002]">
+    <div
+      class="absolute flex flex-col w-max z-[1002] opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none group-hover:pointer-events-auto"
+    >
       <ul class="border rounded dropdown bg-white mt-3">
         <template
           v-for="(subitem, subindex) in props.item.items"
@@ -41,7 +46,7 @@ const props = defineProps<{
                         active: (subitem as Link).activeAppUrl == state.activeAppUrl,
                         disabled: (subitem as Link).disabled
                       }"
-            class="px-4"
+            class="px-4 transition-colors duration-100 hover:bg-gray-50"
           >
             <a
               :href="replaceUrlsVariables(subitem.url)"
