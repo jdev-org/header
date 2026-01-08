@@ -17,9 +17,7 @@ const props = defineProps<{
   <div class="group inline-block relative">
     <button class="nav-item after:hover:scale-x-0 flex items-center">
       <span
-        v-if="
-          props.item.itemSelectedTitle && getItemSelectedTitle(props.item.items)
-        "
+        v-if="getItemSelectedTitle(props.item.items)"
         class="lg:mr-2 md:mr-1 first-letter:capitalize"
         >{{ getItemSelectedTitle(props.item.items) }}</span
       >

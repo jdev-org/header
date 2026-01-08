@@ -15,7 +15,13 @@ const props = defineProps<{
   <div class="flex justify-center items-center mx-2 xl:mx-6 header-right">
     <div class="group inline-block relative" v-if="!props.isAnonymous">
       <button class="btn p-2 after:hover:scale-x-0 flex flex-col items-center">
-        <UserIcon class="font-bold text-2xl inline-block"></UserIcon>
+        <UserIcon
+          class="font-bold inline-block"
+          :class="{
+            'text-2xl': !state.config.displayFullnameInAccountBtn,
+            'text-xl': state.config.displayFullnameInAccountBtn,
+          }"
+        ></UserIcon>
         <template v-if="state.config.displayFullnameInAccountBtn">
           <span class="text-xs max-w-[100px] truncate">
             {{ state.user?.firstname }}
