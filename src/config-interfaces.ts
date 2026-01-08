@@ -36,6 +36,8 @@ export interface Separator extends MenuItem {}
 export interface Config {
   //Logo url to display in the header
   logoUrl?: string
+  //Minized logo url to display in the header (used between 768 and 1024px if set)
+  minimizedLogoUrl?: string
   //Title to the logo displayed in the header
   logoTitle?: string
   //Whether to hide the login button
@@ -52,4 +54,6 @@ export interface Config {
   logoutUrl: string
   //Use it if you want a different logout URL for external authentication providers
   logoutExternalUrl?: string
+  //Menu items to display in the header
+  displayFullnameInAccountBtn?: boolean
 }

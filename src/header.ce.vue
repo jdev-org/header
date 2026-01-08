@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive } from 'vue'
+import { computed, onMounted } from 'vue'
 import { getUserDetails } from './auth'
-import type { User } from './auth'
-import UserIcon from './ui/UserIcon.vue'
-import GeorchestraLogo from '@/ui/GeorchestraLogo.vue'
-import ChevronDownIcon from '@/ui/ChevronDownIcon.vue'
 import { getI18n, t } from '@/i18n'
-import type { Link, Separator, Dropdown, Config } from '@/config-interfaces'
-import { defaultMenu, defaultConfig } from '@/default-config.json'
+import { state, replaceUrlsVariables } from '@/shared'
+import { allNodes } from '@/utils'
+import Menu from '@/ui/Menu.vue'
+import AccountItem from '@/ui/AccountItem.vue'
+import Logo from '@/ui/Logo.vue'
+import BurgerIcon from '@/ui/icons/BurgerIcon.vue'
 
 const props = defineProps<{
   activeApp?: string
@@ -19,18 +19,6 @@ const props = defineProps<{
   logoUrl?: string
   customNonce?: string
 }>()
-
-const state = reactive({
-  user: null as null | User,
-  mobileMenuOpen: false,
-  menu: defaultMenu as (Link | Separator | Dropdown)[],
-  config: defaultConfig as Config,
-  lang3: 'eng',
-  loaded: false,
-  matchedRouteScore: 0,
-  activeAppUrl: '' as string | undefined,
-  activeDropdown: null as null | number,
-})
 
 const isAnonymous = computed(() => !state.user || state.user.anonymous)
 const isWarned = computed(() => state.user?.warned)
@@ -45,40 +33,11 @@ const loginUrl = computed(() => {
 })
 const logoutUrl = computed(() =>
   replaceUrlsVariables(
-    state.user?.isExternalAuth
+    state.user?.isExternalAuth && state.config.logoutExternalUrl
       ? state.config.logoutExternalUrl
       : state.config.logoutUrl
   )
 )
-
-function checkCondition(item: Link | Separator | Dropdown): boolean {
-  const rolesAllowed = item.hasRole
-  const hideMobile = item.hideMobile
-  const isMobile = window.innerWidth < 768
-  if (hideMobile && isMobile) return false
-  if (!state.user) return false
-  if (!rolesAllowed) return true
-  const isBlocked = item.blockedRole
-    ?.split(',')
-    .some(c => state.user?.roles?.indexOf(c) !== -1)
-  if (isBlocked) return false
-  return rolesAllowed
-    .split(',')
-    .some(rolePattern =>
-      rolePattern.endsWith('*')
-        ? state.user?.roles?.some(userRole =>
-            userRole.startsWith(rolePattern.slice(0, -1))
-          )
-        : state.user?.roles?.includes(rolePattern)
-    )
-}
-
-function replaceUrlsVariables(url: string = ''): string {
-  return url
-    .replace(/:lang3/, state.lang3)
-    .replace(/:origin/, encodeURI(window.location.origin))
-    .replace(/:currentUrl/, encodeURI(window.location.href))
-}
 
 function determineActiveApp(): void {
   const allLinks = allNodes(state.menu, 'activeAppUrl')
@@ -121,20 +80,6 @@ function determineActiveApp(): void {
   }
 }
 
-function allNodes(obj: any, key: string, array?: any[]): string[] {
-  array = array || []
-  if ('object' === typeof obj) {
-    for (let k in obj) {
-      if (k === key) {
-        array.push(obj[k])
-      } else {
-        allNodes(obj[k], key, array)
-      }
-    }
-  }
-  return array
-}
-
 function setI18nAndActiveApp(i18n?: any) {
   state.lang3 = getI18n(
     i18n || {},
@@ -143,10 +88,6 @@ function setI18nAndActiveApp(i18n?: any) {
   state.config.logoutExternalUrl ??= state.config.logoutUrl
   determineActiveApp()
   state.loaded = true
-}
-
-function toggleDropdown(index: number) {
-  state.activeDropdown = state.activeDropdown === index ? null : index
 }
 
 onMounted(() => {
@@ -182,6 +123,7 @@ onMounted(() => {
   <header
     v-else-if="state.loaded"
     class="host h-[80px] text-base"
+    :class="{ 'has-custom-stylesheet': state.config.stylesheet }"
     :style="`height:${props.height}px`"
   >
     <link
@@ -197,112 +139,12 @@ onMounted(() => {
       :nonce="props.customNonce"
     />
     <div
-      class="justify-between text-slate-600 md:flex hidden h-full bg-white md:text-sm"
+      class="justify-between text-slate-600 lg:flex hidden h-full bg-white lg:text-sm"
     >
       <div class="flex header-left">
-        <a
-          href="/"
-          class="flex justify-center items-center lg:px-3 md:px-2 py-2"
-        >
-          <img
-            v-if="props.logoUrl || state.config.logoUrl"
-            :src="props.logoUrl || state.config.logoUrl"
-            alt="geOrchestra logo"
-            class="w-32"
-          />
-          <template v-else>
-            <GeorchestraLogo class="w-full h-12 my-auto"></GeorchestraLogo>
-          </template>
-        </a>
+        <Logo :logoUrl="props.logoUrl || state.config.logoUrl" />
         <nav class="flex justify-center items-center font-semibold header-nav">
-          <template v-for="(item, index) in state.menu" :key="index">
-            <template v-if="!item.type && checkCondition(item)">
-              <a
-                :href="(item as Link).url"
-                class="nav-item"
-                @click="state.activeAppUrl = (item as Link).activeAppUrl"
-                :class="{
-                  active: (item as Link).activeAppUrl == state.activeAppUrl,
-                  disabled: (item as Link).disabled
-                }"
-              >
-                <div class="flex items-center">
-                  <i
-                    v-if="(item as Link).icon"
-                    :class="(item as Link).icon"
-                    class="item-icon"
-                    style="font-size: 0.9rem"
-                  ></i>
-                  <span class="ml-1 first-letter:capitalize">
-                    {{
-                      (item as Link).i18n
-                        ? t((item as Link).i18n)
-                        : (item as Link).label
-                    }}
-                  </span>
-                </div>
-              </a>
-            </template>
-            <template
-              v-else-if="(item as Separator).type === 'separator' && checkCondition(item)"
-            >
-              <span class="text-gray-400">|</span>
-            </template>
-            <template
-              v-else-if="item.type === 'dropdown' && checkCondition(item)"
-            >
-              <div class="group inline-block relative">
-                <button
-                  class="nav-item after:hover:scale-x-0 flex items-center"
-                >
-                  <span class="lg:mr-2 md:mr-1 first-letter:capitalize">{{
-                    (item as Dropdown).i18n
-                      ? t((item as Dropdown).i18n)
-                      : (item as Dropdown).label
-                  }}</span>
-                  <ChevronDownIcon
-                    class="w-4 h-4"
-                    stroke-width="4"
-                  ></ChevronDownIcon>
-                </button>
-                <ul
-                  class="absolute hidden group-hover:flex flex-col w-max border rounded dropdown z-[1002] bg-white"
-                >
-                  <template
-                    v-for="(subitem, subindex) in (item as Dropdown).items"
-                    :key="subindex"
-                  >
-                    <li
-                      v-if="checkCondition(subitem)"
-                      @click="
-                        state.activeAppUrl = (subitem as Link).activeAppUrl
-                      "
-                      :class="{
-                        active: (subitem as Link).activeAppUrl == state.activeAppUrl,
-                        disabled: (subitem as Link).disabled
-                      }"
-                      class="px-4"
-                    >
-                      <a
-                        :href="replaceUrlsVariables(subitem.url)"
-                        class="capitalize !flex justify-center items-center"
-                      >
-                        <i
-                          v-if="subitem.icon"
-                          :class="subitem.icon"
-                          class="pr-1 block pb-[2px] subitem-icon"
-                          style="font-size: 1rem"
-                        ></i>
-                        <span class="block">{{
-                          subitem.i18n ? t(subitem.i18n) : subitem.label
-                        }}</span>
-                      </a>
-                    </li>
-                  </template>
-                </ul>
-              </div>
-            </template>
-          </template>
+          <Menu />
 
           <span class="text-gray-400 text-xs" v-if="isWarned">
             <a href="/console/account/changePassword">
@@ -313,170 +155,34 @@ onMounted(() => {
           >
         </nav>
       </div>
-      <div class="flex justify-center items-center mx-6 header-right">
-        <div v-if="!isAnonymous" class="flex gap-4 items-baseline">
-          <a
-            class="link-btn"
-            href="/console/account/userdetails"
-            :title="`${state.user?.firstname} ${state.user?.lastname}`"
-          >
-            <UserIcon class="font-bold text-3xl inline-block"></UserIcon>
-            <span class="text-xs max-w-[120px] truncate">{{
-              `${state.user?.firstname} ${state.user?.lastname}`
-            }}</span></a
-          >
-          <a class="link-btn" :href="logoutUrl"
-            ><span class="first-letter:capitalize">{{ t('logout') }}</span></a
-          >
-        </div>
-        <a
-          v-if="!state.config.hideLogin && isAnonymous"
-          class="btn"
-          :href="loginUrl"
-          >{{ t('login') }}</a
-        >
-      </div>
+      <AccountItem
+        :is-anonymous="isAnonymous"
+        :login-url="loginUrl"
+        :logout-url="logoutUrl"
+      />
     </div>
-    <div class="flex-col md:hidden w-full h-full">
+    <div class="flex-col lg:hidden w-full h-full">
       <div
-        class="h-full inline-flex items-center justify-start align-middle px-6 py-8 shrink-0 w-full bg-primary/10"
+        class="h-full inline-flex items-center justify-start align-middle px-4 py-6 shrink-0 w-full bg-primary/10"
       >
         <div class="grow flex justify-start items-center py-3">
           <span class="inline-flex items-center rounded-full">
-            <button
-              type="button"
-              @click="state.mobileMenuOpen = !state.mobileMenuOpen"
-            >
-              <svg
-                v-if="state.mobileMenuOpen"
-                xmlns="http://www.w3.org/2000/svg"
-                height="24"
-                viewBox="0 -960 960 960"
-                width="24"
-              >
-                <path
-                  d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-                />
-              </svg>
-              <svg
-                v-else
-                xmlns="http://www.w3.org/2000/svg"
-                height="24"
-                viewBox="0 -960 960 960"
-                width="24"
-              >
-                <path
-                  d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"
-                />
-              </svg>
-            </button>
-            <a href="/" class="block ml-3">
-              <img
-                v-if="props.logoUrl || state.config.logoUrl"
-                :src="props.logoUrl || state.config.logoUrl"
-                alt="geOrchestra logo"
-                class="w-24"
-              />
-              <GeorchestraLogo v-else></GeorchestraLogo>
-            </a>
+            <BurgerIcon class="mr-3" />
+            <Logo :logoUrl="props.logoUrl || state.config.logoUrl" />
           </span>
         </div>
-        <div class="flex justify-center items-center">
-          <div v-if="!isAnonymous" class="flex gap-4 items-baseline">
-            <a class="link-btn" href="/console/account/userdetails">
-              <UserIcon class="font-bold text-3xl inline-block mr-4"></UserIcon>
-              <span>{{
-                `${state.user?.firstname} ${state.user?.lastname}`
-              }}</span></a
-            >
-            <a class="link-btn" :href="logoutUrl">{{ t('logout') }}</a>
-          </div>
-          <a v-else class="btn" :href="loginUrl">{{ t('login') }}</a>
-        </div>
+        <AccountItem
+          :is-anonymous="isAnonymous"
+          :login-url="loginUrl"
+          :logout-url="logoutUrl"
+        />
       </div>
 
       <div
         class="absolute z-[1000] bg-white w-full duration-300 transition-opacity ease-in-out"
       >
         <nav class="flex flex-col font-semibold" v-if="state.mobileMenuOpen">
-          <template v-for="(item, index) in state.menu" :key="index">
-            <template v-if="!item.type && checkCondition(item)">
-              <a
-                :href="(item as Link).url"
-                class="nav-item-mobile"
-                @click="state.activeAppUrl = (item as Link).activeAppUrl"
-                :class="{
-                  active: (item as Link).activeAppUrl == state.activeAppUrl,
-                  disabled: (item as Link).disabled
-                }"
-              >
-                <div class="flex items-center">
-                  <span class="ml-1 first-letter:capitalize">
-                    {{
-                      (item as Link).i18n
-                        ? t((item as Link).i18n)
-                        : (item as Link).label
-                    }}
-                  </span>
-                </div>
-              </a>
-            </template>
-            <template
-              v-else-if="item.type === 'dropdown' && checkCondition(item)"
-            >
-              <div class="group inline-block relative">
-                <button
-                  class="nav-item-mobile after:hover:scale-x-0 flex items-center"
-                  @click="toggleDropdown(index)"
-                >
-                  <span class="lg:mr-2 md:mr-1 first-letter:capitalize">{{
-                    (item as Dropdown).i18n
-                      ? t((item as Dropdown).i18n)
-                      : (item as Dropdown).label
-                  }}</span>
-                  <ChevronDownIcon
-                    class="w-4 h-4"
-                    stroke-width="4"
-                  ></ChevronDownIcon>
-                </button>
-                <ul
-                  class="absolute border rounded w-full dropdown z-[1002] bg-white"
-                  v-show="state.activeDropdown === index"
-                >
-                  <template
-                    v-for="(subitem, subindex) in (item as Dropdown).items"
-                    :key="subindex"
-                  >
-                    <li
-                      v-if="checkCondition(subitem)"
-                      @click="
-                        state.activeAppUrl = (subitem as Link).activeAppUrl
-                      "
-                      :class="{
-                        active: (subitem as Link).activeAppUrl == state.activeAppUrl,
-                        disabled: (subitem as Link).disabled
-                      }"
-                    >
-                      <a
-                        :href="replaceUrlsVariables(subitem.url)"
-                        class="capitalize !flex justify-center items-center"
-                      >
-                        <i
-                          v-if="subitem.icon"
-                          :class="subitem.icon"
-                          class="pr-1 block pb-[2px] subitem-icon"
-                          style="font-size: 1rem"
-                        ></i>
-                        <span class="block">{{
-                          subitem.i18n ? t(subitem.i18n) : subitem.label
-                        }}</span>
-                      </a>
-                    </li>
-                  </template>
-                </ul>
-              </div>
-            </template>
-          </template>
+          <Menu />
         </nav>
       </div>
     </div>
@@ -498,7 +204,7 @@ onMounted(() => {
 
 @layer components {
   @layer colors {
-    header {
+    header:not(.has-custom-stylesheet) {
       --georchestra-header-primary: #85127e;
       --georchestra-header-primary-light: #85127e1a;
     }
@@ -510,7 +216,7 @@ onMounted(() => {
   }
 
   .nav-item {
-    @apply relative text-lg w-fit block after:hover:scale-x-100 lg:mx-3 md:mx-2 hover:text-black first-letter:capitalize text-base;
+    @apply relative w-fit block after:hover:scale-x-100 xl:mx-3 md:mx-2 hover:text-black first-letter:capitalize text-base;
   }
 
   .nav-item:after {
