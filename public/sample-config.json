@@ -2,7 +2,7 @@
   "config": {
     "stylesheet": "/public/georchestra.css",
     "logoUrl": "/public/logoipsum-385.svg",
-    "squareLogoUrl": "/public/logoipsum-square.png",
+    "minimizedLogoUrl": "/public/logoipsum-square.png",
     "hideLogin": false,
     "iconsUrl": "https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css",
     "lang": "fr",
