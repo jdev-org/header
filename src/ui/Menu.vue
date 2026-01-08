@@ -14,7 +14,7 @@ function toggleDropdown(index: number) {
   <template v-for="(item, index) in state.menu" :key="index">
     <template v-if="checkCondition(item)">
       <!--   DESKTOP   -->
-      <div class="md:flex hidden">
+      <div class="lg:flex hidden">
         <LinkItem :item="(item as Link)" v-if="!item.type" />
         <template v-else-if="(item as Separator).type === 'separator'">
           <span class="text-gray-400">|</span>
@@ -26,7 +26,7 @@ function toggleDropdown(index: number) {
       </div>
 
       <!--   MOBILE   -->
-      <div class="md:hidden">
+      <div class="lg:hidden">
         <template v-if="!item.type">
           <a
             :href="(item as Link).url"

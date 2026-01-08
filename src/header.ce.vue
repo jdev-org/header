@@ -139,7 +139,7 @@ onMounted(() => {
       :nonce="props.customNonce"
     />
     <div
-      class="justify-between text-slate-600 md:flex hidden h-full bg-white md:text-sm"
+      class="justify-between text-slate-600 lg:flex hidden h-full bg-white lg:text-sm"
     >
       <div class="flex header-left">
         <Logo :logoUrl="props.logoUrl || state.config.logoUrl" />
@@ -161,7 +161,7 @@ onMounted(() => {
         :logout-url="logoutUrl"
       />
     </div>
-    <div class="flex-col md:hidden w-full h-full">
+    <div class="flex-col lg:hidden w-full h-full">
       <div
         class="h-full inline-flex items-center justify-start align-middle px-4 py-6 shrink-0 w-full bg-primary/10"
       >
