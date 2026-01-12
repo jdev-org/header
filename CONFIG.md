@@ -42,6 +42,35 @@ example `justify-between`).
 > See Tailwind's justify content utilities:
 > https://tailwindcss.com/docs/justify-content
 
+### Custom icon
+
+The NavItem component (link and dropdown) supports two ways to display an icon:
+
+- Using a URL with with iconUrl` param
+- using icon from css sheet (e.g iconoir) with icon param
+
+`iconUrl` will be use first if both are provided.
+
+Examples : 
+
+```
+iconUrl: "/icons/catalog.svg"
+icon: "icon": "iconoir-map"
+```
+
+
+### Custom class
+
+You can insert a custom class onto link and dropdown element via `customClass` param.
+
+Example : 
+
+```
+customClass: "custom-catalog-btn"
+```
+
+### Active tab matching 
+
 **Example:**
 
 ```json

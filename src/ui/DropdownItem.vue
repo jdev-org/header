@@ -21,9 +21,28 @@ const props = defineProps<{
         class="lg:mr-2 md:mr-1 first-letter:capitalize"
         >{{ getItemSelectedTitle(props.item.items) }}</span
       >
-      <span v-else class="lg:mr-2 md:mr-1 first-letter:capitalize">{{
-        props.item.i18n ? t(props.item.i18n) : props.item.label
-      }}</span>
+      <span
+        v-else
+        :class="[
+          'flex items-center lg:mr-2 md:mr-1 first-letter:capitalize',
+          props.item.customClass,
+        ]"
+      >
+        <img
+          v-if="props.item.iconUrl"
+          :src="props.item.iconUrl"
+          alt=""
+          class="pr-1 block pb-[2px] subitem-icon"
+          style="width: 1rem; height: 1rem"
+        />
+        <i
+          v-else-if="props.item.icon"
+          :class="props.item.icon"
+          class="pr-1 block pb-[2px] subitem-icon"
+          style="font-size: 1rem"
+        ></i>
+        {{ props.item.i18n ? t(props.item.i18n) : props.item.label }}</span
+      >
       <ChevronDownIcon
         class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180"
         stroke-width="4"
@@ -40,18 +59,27 @@ const props = defineProps<{
           <li
             v-if="checkCondition(subitem)"
             @click="state.activeAppUrl = (subitem as Link).activeAppUrl"
-            :class="{
-                        active: (subitem as Link).activeAppUrl == state.activeAppUrl,
-                        disabled: (subitem as Link).disabled
-                      }"
-            class="px-4 transition-colors duration-100 hover:bg-gray-50"
+            :class="[
+              'px-4 transition-colors duration-100 hover:bg-gray-50',
+              subitem.customClass,
+              {
+                active: (subitem as Link).activeAppUrl == state.activeAppUrl,
+                disabled: (subitem as Link).disabled
+              }]"
           >
             <a
               :href="replaceUrlsVariables(subitem.url)"
               class="capitalize !flex justify-start items-start"
             >
+              <img
+                v-if="subitem.iconUrl"
+                :src="subitem.iconUrl"
+                alt=""
+                class="pr-1 block pb-[2px] subitem-icon"
+                style="width: 1rem; height: 1rem"
+              />
               <i
-                v-if="subitem.icon"
+                v-else-if="subitem.icon"
                 :class="subitem.icon"
                 class="pr-1 block pb-[2px] subitem-icon"
                 style="font-size: 1rem"
