@@ -45,7 +45,7 @@ Use `targetMenu` property with value "right" or "left" or empty.
 Left side will contain items without `targetMenu` property and items with `targetMenu="left"` value.
 Righ side will contain items with `targetMenu="right"` value
 
-Menu's item configuration example : 
+Menu's item configuration example :
 
 ```
     {
@@ -57,6 +57,7 @@ Menu's item configuration example :
       "targetMenu": "right"
     }
 ```
+
 ### Active tab matching
 
 A decision has been made in order to have the best match between the active tab and the current page.
