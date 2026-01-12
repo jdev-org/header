@@ -49,7 +49,12 @@ export interface Config {
   //Force header's language
   lang?: string
   //Login URL to redirect to
-  login: { url: string; params?: Array<{ [key: string]: string }> }
+  login: {
+    url: string
+    params?: Array<{ [key: string]: string }>
+    customClass?: string
+    showAccountBtnText?: boolean
+  }
   //Logout URL to redirect to
   logoutUrl: string
   //Use it if you want a different logout URL for external authentication providers
