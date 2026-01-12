@@ -1,4 +1,4 @@
-interface MenuItem {
+export interface MenuItem {
   type?: string
   //Role required to display the item, can end with a star to match prefixed roles (e.g. ROLE_SUPERSET_*)
   hasRole?: string
@@ -6,6 +6,8 @@ interface MenuItem {
   blockedRole?: string
   //If the item is hidden in mobile mode
   hideMobile?: boolean
+  // Option - to select right or left menu side
+  targetMenu?: string
 }
 
 export interface Link extends MenuItem {
@@ -49,7 +51,14 @@ export interface Config {
   //Force header's language
   lang?: string
   //Login URL to redirect to
-  login: { url: string; params?: Array<{ [key: string]: string }> }
+  login: {
+    // to display text instead icon
+    showAccountBtnText?: boolean
+    customClass?: string
+    // login url
+    url: string
+    params?: Array<{ [key: string]: string }>
+  }
   //Logout URL to redirect to
   logoutUrl: string
   //Use it if you want a different logout URL for external authentication providers

@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { checkCondition, replaceUrlsVariables, state } from '@/shared'
-import type { Dropdown, Link, Separator } from '@/config-interfaces'
+import type { Dropdown, Link, Separator, MenuItem } from '@/config-interfaces'
 import DropdownItem from '@/ui/DropdownItem.vue'
 import LinkItem from '@/ui/LinkItem.vue'
 import ChevronDownIcon from '@/ui/icons/ChevronDownIcon.vue'
@@ -9,9 +10,17 @@ import { t } from '@/i18n'
 function toggleDropdown(index: number) {
   state.activeDropdown = state.activeDropdown === index ? null : index
 }
+const props = defineProps<{
+  items?: MenuItem[]
+}>()
+
+const menuItems = computed<MenuItem[]>(() => {
+  return props.items && props.items.length > 0 ? props.items : state.menu
+})
 </script>
+
 <template>
-  <template v-for="(item, index) in state.menu" :key="index">
+  <template v-for="(item, index) in menuItems" :key="index">
     <template v-if="checkCondition(item)">
       <!--   DESKTOP   -->
       <div class="lg:flex hidden">

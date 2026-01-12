@@ -39,6 +39,13 @@ const logoutUrl = computed(() =>
   )
 )
 
+const leftMenuItems = computed(() =>
+  state.menu.filter(item => item?.targetMenu !== 'right')
+)
+const rightMenuItems = computed(() =>
+  state.menu.filter(item => item?.targetMenu === 'right')
+)
+
 function determineActiveApp(): void {
   const allLinks = allNodes(state.menu, 'activeAppUrl')
   const computedUrl = window.location.href.substring(
@@ -141,10 +148,20 @@ onMounted(() => {
     <div
       class="justify-between text-slate-600 lg:flex hidden h-full bg-white lg:text-sm"
     >
-      <div class="flex header-left">
+      <div class="flex header-left grow">
         <Logo :logoUrl="props.logoUrl || state.config.logoUrl" />
-        <nav class="flex justify-center items-center font-semibold header-nav">
-          <Menu />
+        <nav
+          class="flex justify-between items-center font-semibold header-nav grow"
+        >
+          <div class="flex justify-center items-center font-semibold">
+            <Menu :items="leftMenuItems" />
+          </div>
+          <div
+            v-if="rightMenuItems?.length"
+            class="flex justify-center items-center font-semibold"
+          >
+            <Menu :items="rightMenuItems" />
+          </div>
 
           <span class="text-gray-400 text-xs" v-if="isWarned">
             <a href="/console/account/changePassword">
