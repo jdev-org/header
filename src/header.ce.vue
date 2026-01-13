@@ -154,13 +154,10 @@ onMounted(() => {
           class="flex justify-between items-center font-semibold header-nav grow"
         >
           <div class="flex justify-center items-center font-semibold">
-            <Menu :items="leftMenuItems" />
+            <Menu v-if="leftMenuItems?.length" :items="leftMenuItems" />
           </div>
-          <div
-            v-if="rightMenuItems?.length"
-            class="flex justify-center items-center font-semibold"
-          >
-            <Menu :items="rightMenuItems" />
+          <div class="flex justify-center items-center font-semibold">
+            <Menu v-if="rightMenuItems?.length" :items="rightMenuItems" />
           </div>
 
           <span class="text-gray-400 text-xs" v-if="isWarned">
