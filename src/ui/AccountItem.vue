@@ -14,7 +14,12 @@ const props = defineProps<{
 <template>
   <div class="flex justify-center items-center mx-2 xl:mx-6 header-right">
     <div class="group inline-block relative" v-if="!props.isAnonymous">
-      <button class="btn p-2 after:hover:scale-x-0 flex flex-col items-center">
+      <button
+        :class="[
+          'btn p-2 after:hover:scale-x-0 flex flex-col items-center',
+          state.config.login?.customClass,
+        ]"
+      >
         <UserIcon
           class="font-bold inline-block"
           :class="{
@@ -65,11 +70,15 @@ const props = defineProps<{
     </div>
     <a
       v-if="!state.config.hideLogin && props.isAnonymous"
-      class="btn p-2"
+      :class="['btn p-2', state.config.login?.customClass]"
       :href="loginUrl"
       :title="capitalize(t('login'))"
     >
-      <LoginIcon class="font-bold text-2xl inline-block" />
+      <span v-if="state.config.login?.showAccountBtnText">
+        {{ t('login') }}
+      </span>
+
+      <LoginIcon v-else class="font-bold text-2xl inline-block" />
     </a>
   </div>
 </template>
