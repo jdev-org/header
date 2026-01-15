@@ -1,4 +1,4 @@
-export interface MenuItem {
+export interface AbstractBaseInterface {
   type?: string
   //Role required to display the item, can end with a star to match prefixed roles (e.g. ROLE_SUPERSET_*)
   hasRole?: string
@@ -6,12 +6,10 @@ export interface MenuItem {
   blockedRole?: string
   //If the item is hidden in mobile mode
   hideMobile?: boolean
-  // Option - to select right or left menu side
-  targetMenu?: string
 }
 
-export interface Link extends MenuItem {
-  label: string
+export interface Link extends AbstractBaseInterface {
+  label?: string
   //URL to redirect to
   url: string
   //i18n key to display the label
@@ -25,7 +23,7 @@ export interface Link extends MenuItem {
   disabled?: boolean
 }
 
-export interface Dropdown extends MenuItem {
+export interface Dropdown extends AbstractBaseInterface {
   label: string
   //i18n key to display the label
   i18n?: string
@@ -33,7 +31,12 @@ export interface Dropdown extends MenuItem {
   items?: Array<Link>
 }
 
-export interface Separator extends MenuItem {}
+export interface Separator extends AbstractBaseInterface {}
+
+export interface Navigation {
+  class?: string
+  menus?: Array<Array<Link | Separator | Dropdown>>
+}
 
 export interface Config {
   //Logo url to display in the header
@@ -52,12 +55,10 @@ export interface Config {
   lang?: string
   //Login URL to redirect to
   login: {
-    // to display text instead icon
-    showAccountBtnText?: boolean
-    customClass?: string
-    // login url
     url: string
     params?: Array<{ [key: string]: string }>
+    customClass?: string
+    showAccountBtnText?: boolean
   }
   //Logout URL to redirect to
   logoutUrl: string

@@ -1,114 +1,100 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { checkCondition, replaceUrlsVariables, state } from '@/shared'
-import type { Dropdown, Link, Separator, MenuItem } from '@/config-interfaces'
+import type { Dropdown, Link, Separator } from '@/config-interfaces'
 import DropdownItem from '@/ui/DropdownItem.vue'
 import LinkItem from '@/ui/LinkItem.vue'
 import ChevronDownIcon from '@/ui/icons/ChevronDownIcon.vue'
 import { t } from '@/i18n'
 
+type MenuItem = Link | Separator | Dropdown
+
+const props = defineProps<{
+  items: MenuItem[][]
+}>()
+
+// keep only one list for mobile mode
+const flattenedItems = computed<MenuItem[]>(() => {
+  return ([] as MenuItem[]).concat(...props.items)
+})
+
+const asLink = (item: MenuItem) => item as Link
+const asDropdown = (item: MenuItem) => item as Dropdown
+
 function toggleDropdown(index: number) {
   state.activeDropdown = state.activeDropdown === index ? null : index
 }
-const props = defineProps<{
-  items?: MenuItem[]
-}>()
-
-const menuItems = computed<MenuItem[]>(() => {
-  return props.items && props.items.length > 0 ? props.items : state.menu
-})
 </script>
-
 <template>
-  <template v-for="(item, index) in menuItems" :key="index">
-    <template v-if="checkCondition(item)">
-      <!--   DESKTOP   -->
-      <div class="lg:flex hidden">
-        <LinkItem :item="(item as Link)" v-if="!item.type" />
-        <template v-else-if="(item as Separator).type === 'separator'">
-          <span class="text-gray-400">|</span>
-        </template>
-        <DropdownItem
-          :item="(item as Dropdown)"
-          v-else-if="item.type === 'dropdown'"
-        />
-      </div>
+  <div
+    v-for="(group, gIndex) in props.items"
+    :key="`group-${gIndex}`"
+    class="hidden lg:flex items-center gap-1"
+  >
+    <template v-for="(item, index) in (group as MenuItem[])" :key="index">
+      <template v-if="checkCondition(item)">
+        <LinkItem v-if="!item.type" :item="asLink(item)" />
 
-      <!--   MOBILE   -->
-      <div class="lg:hidden">
-        <template v-if="!item.type">
-          <a
-            :href="(item as Link).url"
-            class="nav-item-mobile"
-            @click="state.activeAppUrl = (item as Link).activeAppUrl"
-            :class="{
-                  active: (item as Link).activeAppUrl == state.activeAppUrl,
-                  disabled: (item as Link).disabled
-                }"
-          >
-            <div class="flex items-center">
-              <span class="ml-1 first-letter:capitalize">
-                {{
-                  (item as Link).i18n
-                    ? t((item as Link).i18n)
-                    : (item as Link).label
-                }}
-              </span>
-            </div>
-          </a>
+        <template v-else-if="item.type === 'separator'">
+          <span class="text-gray-400 mx-1">|</span>
         </template>
-        <template v-else-if="item.type === 'dropdown'">
-          <div class="group inline-block relative w-full">
-            <button
-              class="nav-item-mobile after:hover:scale-x-0 flex items-center"
-              @click="toggleDropdown(index)"
-            >
-              <span class="lg:mr-2 md:mr-1 first-letter:capitalize">{{
-                (item as Dropdown).i18n
-                  ? t((item as Dropdown).i18n)
-                  : (item as Dropdown).label
-              }}</span>
-              <ChevronDownIcon
-                class="w-4 h-4"
-                stroke-width="4"
-              ></ChevronDownIcon>
-            </button>
-            <ul
-              class="absolute border rounded w-full dropdown z-[1002] bg-white"
-              v-show="state.activeDropdown === index"
-            >
-              <template
-                v-for="(subitem, subindex) in (item as Dropdown).items"
-                :key="subindex"
-              >
-                <li
-                  v-if="checkCondition(subitem)"
-                  @click="state.activeAppUrl = (subitem as Link).activeAppUrl"
-                  :class="{
-                        active: (subitem as Link).activeAppUrl == state.activeAppUrl,
-                        disabled: (subitem as Link).disabled
-                      }"
-                >
-                  <a
-                    :href="replaceUrlsVariables(subitem.url)"
-                    class="capitalize !flex justify-center items-center"
-                  >
-                    <i
-                      v-if="subitem.icon"
-                      :class="subitem.icon"
-                      class="pr-1 block pb-[2px] subitem-icon"
-                      style="font-size: 1rem"
-                    ></i>
-                    <span class="block">{{
-                      subitem.i18n ? t(subitem.i18n) : subitem.label
-                    }}</span>
-                  </a>
-                </li>
-              </template>
-            </ul>
-          </div>
-        </template>
-      </div>
+
+        <DropdownItem
+          v-else-if="item.type === 'dropdown'"
+          :item="asDropdown(item)"
+        />
+      </template>
     </template>
-  </template>
+  </div>
+
+  <div class="lg:hidden w-full flex flex-col">
+    <template
+      v-for="(item, index) in (flattenedItems as MenuItem[])"
+      :key="`mob-${index}`"
+    >
+      <template v-if="checkCondition(item)">
+        <a
+          v-if="!item.type"
+          :href="replaceUrlsVariables(asLink(item).url)"
+          class="nav-item-mobile"
+          :class="{ active: asLink(item).activeAppUrl === state.activeAppUrl }"
+          @click="state.activeAppUrl = asLink(item).activeAppUrl"
+        >
+          {{ asLink(item).i18n ? t(asLink(item).i18n!) : asLink(item).label }}
+        </a>
+
+        <div v-else-if="item.type === 'dropdown'" class="w-full">
+          <button
+            @click="toggleDropdown(index)"
+            class="nav-item-mobile flex justify-between items-center w-full text-center"
+          >
+            <span class="flex-1 text-center">{{
+              asDropdown(item).i18n
+                ? t(asDropdown(item).i18n!)
+                : asDropdown(item).label
+            }}</span>
+            <ChevronDownIcon
+              :class="{ 'rotate-180': state.activeDropdown === index }"
+              class="w-4 transition-transform"
+            />
+          </button>
+
+          <div
+            v-show="state.activeDropdown === index"
+            class="bg-gray-50 text-center"
+          >
+            <a
+              v-for="sub in asDropdown(item).items"
+              :key="sub.label"
+              :href="replaceUrlsVariables(sub.url)"
+              class="block py-3 px-10 text-sm border-b last:border-0 text-center"
+              @click="state.activeAppUrl = sub.activeAppUrl"
+            >
+              {{ sub.i18n ? t(sub.i18n) : sub.label }}
+            </a>
+          </div>
+        </div>
+      </template>
+    </template>
+  </div>
 </template>

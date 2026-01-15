@@ -3,9 +3,7 @@
     "hideLogin": false,
     "login": {
       "url": ":currentUrl",
-      "params": [
-        {"login": ""}
-      ]
+      "params": [{ "login": "" }]
     },
     "logoutUrl": "/logout",
     "displayFullnameInAccountBtn": true
