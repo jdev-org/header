@@ -1,12 +1,24 @@
-import type { Config, Dropdown, Link, Separator } from '@/config-interfaces'
+import type {
+  Config,
+  Dropdown,
+  Link,
+  Navigation,
+  Separator,
+} from '@/config-interfaces'
 import { t } from '@/i18n'
 import type { User } from '@/auth'
 import { reactive } from 'vue'
 import { defaultMenu, defaultConfig } from '@/default-config.json'
 
+export type MenuItem = Link | Separator | Dropdown
+
 export const state = reactive({
   user: null as null | User,
   mobileMenuOpen: false,
+  navigation: {
+    class: '',
+    menus: [defaultMenu] as MenuItem[][],
+  } as Navigation,
   menu: defaultMenu as (Link | Separator | Dropdown)[],
   config: defaultConfig as Config,
   lang3: 'eng',

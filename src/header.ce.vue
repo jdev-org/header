@@ -19,7 +19,7 @@ const props = defineProps<{
   logoUrl?: string
   customNonce?: string
 }>()
-
+const navigation = computed(() => state.navigation)
 const isAnonymous = computed(() => !state.user || state.user.anonymous)
 const isWarned = computed(() => state.user?.warned)
 const remainingDays = computed(() => state.user?.remainingDays)
@@ -40,7 +40,9 @@ const logoutUrl = computed(() =>
 )
 
 function determineActiveApp(): void {
-  const allLinks = allNodes(state.menu, 'activeAppUrl')
+  const navigationSource =
+    (state.navigation?.menus?.length ?? 0) > 0 ? state.navigation : state.menu
+  const allLinks = allNodes(navigationSource, 'activeAppUrl')
   const computedUrl = window.location.href.substring(
     window.location.origin.length,
     window.location.href.length
@@ -100,6 +102,24 @@ onMounted(() => {
           .then(res => res.json())
           .then(json => {
             state.config = Object.assign({}, state.config, json.config)
+            const incomingNavigation = json.navigation
+            if (incomingNavigation?.menus?.length) {
+              state.navigation = Object.assign(
+                {},
+                state.navigation,
+                incomingNavigation
+              )
+            } else if (json.menu) {
+              state.navigation = Object.assign({}, state.navigation, {
+                menus: [json.menu],
+              })
+            } else if (incomingNavigation) {
+              state.navigation = Object.assign(
+                {},
+                state.navigation,
+                incomingNavigation
+              )
+            }
             if (json.menu) {
               state.menu = json.menu
             }
@@ -110,6 +130,7 @@ onMounted(() => {
   }
 })
 </script>
+
 <template>
   <div v-if="props.legacyHeader === 'true'">
     <iframe
@@ -141,10 +162,15 @@ onMounted(() => {
     <div
       class="justify-between text-slate-600 lg:flex hidden h-full bg-white lg:text-sm"
     >
-      <div class="flex header-left">
+      <div class="flex header-left flex-1 min-w-0">
         <Logo :logoUrl="props.logoUrl || state.config.logoUrl" />
-        <nav class="flex justify-center items-center font-semibold header-nav">
-          <Menu />
+        <nav
+          :class="[
+            'flex items-center font-semibold header-nav grow',
+            navigation.class || 'justify-start',
+          ]"
+        >
+          <Menu :items="navigation?.menus ?? []" />
 
           <span class="text-gray-400 text-xs" v-if="isWarned">
             <a href="/console/account/changePassword">
@@ -182,7 +208,7 @@ onMounted(() => {
         class="absolute z-[1000] bg-white w-full duration-300 transition-opacity ease-in-out"
       >
         <nav class="flex flex-col font-semibold" v-if="state.mobileMenuOpen">
-          <Menu />
+          <Menu :items="navigation?.menus ?? []" />
         </nav>
       </div>
     </div>
