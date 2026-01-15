@@ -7,7 +7,7 @@ Inside it, you can set the following properties:
 ```json
 {
   "config": {},
-  "menu": [],
+  "navigation": {},
   "i18n": {}
 }
 ```
@@ -29,34 +29,75 @@ Full configuration [is here](./src/config-interfaces.ts#L32-L53).
 
 :warning: You can also define stylesheet in the datadir (`default.properties`) because this file can be used in other georchestra's apps. It will take precedence over the one set in the config file of the header.
 
-## Menu
+## Navigation
 
-Menu can contain three type of objects : `link` (by default), `separator` or `dropdown`
+Navigation can contain three types of objects: `link` (by default), `separator`, or `dropdown`.
 
-There's actually just one level of dropdowns. You cannot have a dropdown inside a dropdown.
+There is only one level of dropdowns. You cannot have a dropdown inside a dropdown.
 
-To see the actual structure of the menu, you can check the [menu interface](./src/default-config.json)
+Navigation is grouped as arrays of menu groups. Each group renders as a horizontal block on desktop.
+If you want left and right blocks, use two groups and set the `navigation.class` accordingly (for
+example `justify-between`). 
 
-### Menu side selection (left or right)
+> See Tailwind's justify content utilities:
+> https://tailwindcss.com/docs/justify-content
 
-We allow to select left or right side to ease position management inside Navbar.
-Use `targetMenu` property with value "right" or "left" or empty.
+**Example:**
 
-Left side will contain items without `targetMenu` property and items with `targetMenu="left"` value.
-Righ side will contain items with `targetMenu="right"` value
-
-Menu's item configuration example :
-
+```json
+{
+  "navigation": {
+    "class": "justify-between",
+    "menus": [
+      [
+        {
+          "label": "Map stuff:",
+          "url": "",
+          "disabled": true
+        },
+        {
+          "label": "WMS/WFS",
+          "i18n": "customi18n",
+          "url": "/geoserver/web",
+          "activeAppUrl": "includes:/geoserver",
+          "icon": "iconoir-map"
+        }
+      ],
+      [
+        {
+          "type": "dropdown",
+          "label": "A dropdown",
+          "items": [
+            {
+              "label": "Console",
+              "i18n": "users",
+              "url": "/console/manager/home",
+              "activeAppUrl": "/console",
+              "icon": "iconoir-globe"
+            },
+            {
+              "label": "Geonetwork",
+              "i18n": "catalogue",
+              "url": "/geonetwork/srv/:lang3/catalog.edit#/board",
+              "activeAppUrl": "/geonetwork",
+              "disabled": true
+            }
+          ]
+        },
+        {
+          "label": "Superset admin stuff",
+          "url": "/superset",
+          "activeAppUrl": "/superset",
+          "hasRole": "ROLE_SUPERUSER,ROLE_SUPERSET_*",
+          "icon": "iconoir-graph-up"
+        }
+      ]
+    ]
+  }
+}
 ```
-    {
-      "label": "Contact",
-      "url": "/mapstore/",
-      "activeAppUrl": "includes:/mapstore",
-      "iconUrl": "/public/icon_map.svg",
-      "customClass": "tuto-btn",
-      "targetMenu": "right"
-    }
-```
+
+Legacy: `menu` is still accepted and will be mapped to `navigation.menus[0]`.
 
 ### Active tab matching
 
