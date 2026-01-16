@@ -1,0 +1,7 @@
+mkdocs.yml
+mkdocs/
+docs/
+site/
+venv/
+.venv/
+venv*/

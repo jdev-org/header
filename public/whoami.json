@@ -1,0 +1,15 @@
+{
+    "GeorchestraUser": {
+        "lastUpdated": "774023e16aab40b59f83b0534dad49882fb03c0abebfd8c53dd7494eb1541ed5",
+        "firstName": "john",
+        "lastName": "doe",
+        "roles": [
+            "ROLE_ADMINISTRATOR",
+            "ROLE_USER"
+        ],
+        "organization": "foo",
+        "id": "2e6eef8f-2b3c-4589-a9d5-4z4fc45ebdk7",
+        "email": "johndoe@foo.fr",
+        "username": "jdoe"
+    }
+}
