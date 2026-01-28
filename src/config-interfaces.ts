@@ -21,6 +21,10 @@ export interface Link extends AbstractBaseInterface {
   icon?: string
   //If the link is clickable
   disabled?: boolean
+  // custom css class to add on element
+  customClass?: string
+  // to use icon from url instead icon from lib
+  iconUrl: string
 }
 
 export interface Dropdown extends AbstractBaseInterface {
@@ -29,6 +33,12 @@ export interface Dropdown extends AbstractBaseInterface {
   i18n?: string
   //List of items to display in the dropdown
   items?: Array<Link>
+  // custom css class to add on element
+  customClass?: string
+  // to use icon from url instead icon from lib
+  iconUrl: string
+  //Icon to display next to the label
+  icon?: string
 }
 
 export interface Separator extends AbstractBaseInterface {}

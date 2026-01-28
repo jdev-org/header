@@ -12,14 +12,26 @@ const props = defineProps<{
     :href="props.item.url"
     class="nav-item"
     @click="state.activeAppUrl = props.item.activeAppUrl"
-    :class="{
-      active: props.item.activeAppUrl == state.activeAppUrl,
-      disabled: props.item.disabled,
-    }"
+    :class="[
+      props.item.customClass,
+      {
+        active: props.item.activeAppUrl == state.activeAppUrl,
+        disabled: props.item.disabled,
+      },
+    ]"
   >
     <div class="flex items-center">
+      <!-- Icon from URL (highest priority) -->
+      <img
+        v-if="props.item.iconUrl"
+        :src="props.item.iconUrl"
+        alt=""
+        class="item-icon"
+        style="width: 0.9rem; height: 0.9rem"
+      />
+      <!-- Icon from CSS class (fallback if no iconUrl) -->
       <i
-        v-if="props.item.icon"
+        v-else-if="props.item.icon"
         :class="props.item.icon"
         class="item-icon"
         style="font-size: 0.9rem"
