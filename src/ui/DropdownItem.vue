@@ -2,11 +2,7 @@
 import type { Dropdown, Link } from '@/config-interfaces'
 import { t } from '@/i18n'
 import ChevronDownIcon from '@/ui/icons/ChevronDownIcon.vue'
-import {
-  checkCondition,
-  state,
-  replaceUrlsVariables,
-} from '@/shared'
+import { checkCondition, state, replaceUrlsVariables } from '@/shared'
 
 const props = defineProps<{
   item: Dropdown
