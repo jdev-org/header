@@ -50,13 +50,6 @@ export function checkCondition(item: Link | Separator | Dropdown): boolean {
     )
 }
 
-export function getItemSelectedTitle(items: Array<Link> | undefined): string {
-  const selectedItem = items?.find(
-    item => item.activeAppUrl === state.activeAppUrl
-  )
-  return selectedItem ? t(selectedItem.i18n || selectedItem.label) : ''
-}
-
 export function replaceUrlsVariables(url: string = ''): string {
   return url
     .replace(/:lang3/, state.lang3)

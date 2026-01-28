@@ -189,13 +189,11 @@ onMounted(() => {
     </div>
     <div class="flex-col lg:hidden w-full h-full">
       <div
-        class="h-full inline-flex items-center justify-start align-middle px-4 py-6 shrink-0 w-full bg-primary/10"
+        class="h-full flex items-center justify-between px-4 py-1 shrink-0 w-full bg-primary/10"
       >
-        <div class="grow flex justify-start items-center py-3">
-          <span class="inline-flex items-center rounded-full">
-            <BurgerIcon class="mr-3" />
-            <Logo :logoUrl="props.logoUrl || state.config.logoUrl" />
-          </span>
+        <div class="h-full flex">
+          <BurgerIcon class="mr-3" />
+          <Logo :logoUrl="props.logoUrl || state.config.logoUrl" />
         </div>
         <AccountItem
           :is-anonymous="isAnonymous"

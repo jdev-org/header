@@ -2,12 +2,7 @@
 import type { Dropdown, Link } from '@/config-interfaces'
 import { t } from '@/i18n'
 import ChevronDownIcon from '@/ui/icons/ChevronDownIcon.vue'
-import {
-  checkCondition,
-  getItemSelectedTitle,
-  state,
-  replaceUrlsVariables,
-} from '@/shared'
+import { checkCondition, state, replaceUrlsVariables } from '@/shared'
 
 const props = defineProps<{
   item: Dropdown
@@ -17,12 +12,6 @@ const props = defineProps<{
   <div class="group inline-block relative">
     <button class="nav-item after:hover:scale-x-0 flex items-center">
       <span
-        v-if="getItemSelectedTitle(props.item.items)"
-        class="lg:mr-2 md:mr-1 first-letter:capitalize"
-        >{{ getItemSelectedTitle(props.item.items) }}</span
-      >
-      <span
-        v-else
         :class="[
           'flex items-center lg:mr-2 md:mr-1 first-letter:capitalize',
           props.item.customClass,
