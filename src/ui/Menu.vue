@@ -57,7 +57,10 @@ function toggleDropdown(index: number) {
           v-if="!item.type"
           :href="replaceUrlsVariables(asLink(item).url)"
           class="nav-item-mobile"
-          :class="{ active: asLink(item).activeAppUrl === state.activeAppUrl }"
+          :class="{
+            active: asLink(item).activeAppUrl === state.activeAppUrl,
+            disabled: asLink(item).disabled,
+          }"
           @click="state.activeAppUrl = asLink(item).activeAppUrl"
         >
           {{ asLink(item).i18n ? t(asLink(item).i18n!) : asLink(item).label }}
@@ -88,6 +91,10 @@ function toggleDropdown(index: number) {
               :key="sub.label"
               :href="replaceUrlsVariables(sub.url)"
               class="block py-3 px-10 text-sm border-b last:border-0 text-center"
+              :class="{
+                active: sub.activeAppUrl === state.activeAppUrl,
+                disabled: sub.disabled,
+              }"
               @click="state.activeAppUrl = sub.activeAppUrl"
             >
               {{ sub.i18n ? t(sub.i18n) : sub.label }}

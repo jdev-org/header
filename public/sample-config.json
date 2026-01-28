@@ -45,7 +45,10 @@
               "label": "Geonetwork",
               "i18n": "catalogue",
               "url": "/geonetwork/srv/:lang3/catalog.edit#/board",
-              "activeAppUrl": "/geonetwork",
+              "activeAppUrl": "/geonetwork"
+            },
+            {
+              "label": "A disabled long name link",
               "disabled": true
             }
           ]

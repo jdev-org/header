@@ -13,7 +13,7 @@ const props = defineProps<{
       v-if="props.logoUrl || state.config.logoUrl"
       :src="props.logoUrl || state.config.logoUrl"
       alt="geOrchestra logo"
-      class="max-w-24 xl:max-w-32 min-w-[15px] logo"
+      class="h-full max-w-24 xl:max-w-32 min-w-[15px] logo"
       :class="{ 'lg:hidden xl:block sm:block': state.config.minimizedLogoUrl }"
     />
     <GeorchestraLogo v-else></GeorchestraLogo>
