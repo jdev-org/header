@@ -16,7 +16,7 @@ Resume simple des reglages du header :
 | --- | --- | --- |
 | `headerScript` | URL du script du composant header. | `https://cdn.jsdelivr.net/gh/georchestra/header@dist/header.js` |
 | `headerHeight` | Hauteur du header en px. | `80` |
-| `useLegacyHeader` | Conserver le header legacy en iframe. | `false` |
+| `useLegacyHeader` | Conserver le header historique en iframe. | `false` |
 | `headerUrl` | URL du header legacy (utilisee si `useLegacyHeader=true`). | `/header/` |
 
 ## Remplacement du legacy

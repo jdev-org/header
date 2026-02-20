@@ -16,7 +16,7 @@ Simple overview of the header settings:
 | --- | --- | --- |
 | `headerScript` | URL of the header web component script. | `https://cdn.jsdelivr.net/gh/georchestra/header@dist/header.js` |
 | `headerHeight` | Header height in px. | `80` |
-| `useLegacyHeader` | Keep the legacy iframe header. | `false` |
+| `useLegacyHeader` | To keep using the legacy header | `false` |
 | `headerUrl` | Legacy header URL (used only if `useLegacyHeader=true`). | `/header/` |
 
 ## Legacy replacement
