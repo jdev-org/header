@@ -56,6 +56,7 @@ nav:
     - Installation guide: installation_guide.md
     - Administration guide: administration_guide.md
     - Contribution: contribution.md
+    - Documentation guide : documentation_guide.md
 
 markdown_extensions:
   - admonition
@@ -100,6 +101,7 @@ plugins:
               Installation guide: "Guide d'installation"
               Administration guide: "Guide d'administration"
               Contribution: "Contribution"
+              Documentation guide: "Guide de documentation"
 
 
   - git-revision-date-localized:

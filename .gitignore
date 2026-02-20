@@ -29,3 +29,5 @@ coverage
 
 # mkdor
 *venv*
+*site/*
+*site*

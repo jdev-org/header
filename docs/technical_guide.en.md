@@ -9,10 +9,10 @@
 
 ## Reference documentation
 
-- Vue 3: https://vuejs.org/
-- Vite: https://vitejs.dev/
-- TypeScript: https://www.typescriptlang.org/docs/
-- Tailwind CSS: https://tailwindcss.com/docs
+- Vue 3: [https://vuejs.org/](https://vuejs.org/)
+- Vite: [https://vitejs.dev/](https://vitejs.dev/)
+- TypeScript: [https://www.typescriptlang.org/docs/](https://www.typescriptlang.org/docs/)
+- Tailwind CSS: [https://tailwindcss.com/docs](https://tailwindcss.com/docs)
 
 ## Develop
 

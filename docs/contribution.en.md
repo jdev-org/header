@@ -32,4 +32,5 @@ Technical steps:
 ## Notes
 
 - The `dist` branch is updated automatically on every commit to `main`.
+- Many contributions should update documentation when relevant.
 - Prefer small, focused pull requests.

@@ -32,4 +32,5 @@ Etapes techniques :
 ## Notes
 
 - La branche `dist` est mise a jour automatiquement a chaque commit sur `main`.
+- La plupart des contributions doivent mettre a jour la documentation si besoin.
 - Privilegier des PR petites et focalisees.
