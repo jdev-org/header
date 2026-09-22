@@ -63,6 +63,8 @@ export interface Config {
   stylesheet?: string
   //Link to icons url. Tested with https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css
   iconsUrl?: string
+  //Link to fonts
+  fontsUrls?: string
   //Force header's language
   lang?: string
   //Login URL to redirect to
