@@ -72,6 +72,7 @@ Link fields:
 | --- | --- | --- | --- |
 | `label` | string | Visible label. | Can be replaced by `i18n`. |
 | `url` | string | Target URL. | Required for links. |
+| `target` | string | Where to open the link. | Optional: `_blank`, `_self`, `_parent`, `_top`, or a window name. |
 | `i18n` | string | i18n key for label. | Optional. |
 | `activeAppLink` | string | Active tab matcher. | `start`, `exact`, `includes`, `end` prefixes supported. |
 | `icon` | string | Icon class name. | Depends on `iconsUrl`. |
@@ -152,6 +153,37 @@ Example:
 ```
 
 Legacy: `menu` is still accepted and maps to `navigation.menus[0]`.
+
+### Link targets (`target`)
+
+Set `target` on each link in `navigation.menus`, or in a dropdown's `items`.
+
+Example :
+
+```json
+{
+  "navigation": {
+    "menus": [
+      [
+        {
+          "label": "Catalogue",
+          "url": "/geonetwork",
+          "target": "_blank"
+        }
+      ]
+    ]
+  }
+}
+```
+
+| `target` value | Behavior |
+| --- | --- |
+| `_blank` | Opens a new tab. The header automatically adds `rel="noopener noreferrer"`. The underscore is required. |
+| `blank` or another window name | Opens a named window that can be reused. |
+| `_self` | Opens the link in the current context. |
+| `_parent` | Opens the link in the parent context. |
+| `_top` | Opens the link in the top-level context. |
+| Not set | Uses the browser's default behavior. |
 
 ## Active tab matching
 

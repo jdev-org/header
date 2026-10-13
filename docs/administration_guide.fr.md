@@ -72,6 +72,7 @@ Champs d'un lien :
 | --- | --- | --- | --- |
 | `label` | string | Libelle visible. | Peut etre remplace par `i18n`. |
 | `url` | string | URL cible. | Requis pour les liens. |
+| `target` | string | Cible d'ouverture du lien. | Optionnel : `_blank`, `_self`, `_parent`, `_top` ou nom de fenêtre. |
 | `i18n` | string | Cle i18n pour le libelle. | Optionnel. |
 | `activeAppLink` | string | Regle d'onglet actif. | Prefixes `start`, `exact`, `includes`, `end`. |
 | `icon` | string | Nom de classe d'icone. | Depend de `iconsUrl`. |
@@ -154,6 +155,37 @@ Exemple :
 ```
 
 Legacy : `menu` est toujours accepte et mappe vers `navigation.menus[0]`.
+
+### Cible d'ouverture des liens (`target`)
+
+Définir `target` sur chaque lien dans `navigation.menus`, ou dans les `items` d'un dropdown.
+
+Exemple :
+
+```json
+{
+  "navigation": {
+    "menus": [
+      [
+        {
+          "label": "Catalogue",
+          "url": "/geonetwork",
+          "target": "_blank"
+        }
+      ]
+    ]
+  }
+}
+```
+
+| Valeur de `target` | Comportement |
+| --- | --- |
+| `_blank` | Ouvre un nouvel onglet. Le header ajoute automatiquement `rel="noopener noreferrer"`. L'underscore est nécessaire. |
+| `blank` ou autre nom de fenêtre | Ouvre une fenêtre nommée qui peut être réutilisée. |
+| `_self` | Ouvre le lien dans le contexte courant. |
+| `_parent` | Ouvre le lien dans le contexte parent. |
+| `_top` | Ouvre le lien dans le contexte de plus haut niveau. |
+| Non renseigné | Utilise le comportement par défaut du navigateur. |
 
 ## Matching de l'onglet actif
 
