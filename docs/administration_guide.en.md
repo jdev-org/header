@@ -8,7 +8,7 @@ Set a JSON configuration file with the `config-file` attribute:
 <geor-header config-file="/config.json"></geor-header>
 ```
 
-It can define:
+Structure:
 
 ```json
 {
@@ -46,6 +46,7 @@ Config object fields:
 | `login.params` | array | Query params to add to login URL. | Array of single-key objects. |
 | `login.customClass` | string | Extra CSS class on login/account button. | Optional. |
 | `login.showAccountBtnText` | boolean | Show "Login" text instead of icon. | Optional. |
+| `accountMenu` | array | Extra authenticated account dropdown links. | Optional; logout is appended automatically. |
 | `logoutUrl` | string | Logout URL. | Default `/logout`. |
 | `logoutExternalUrl` | string | Logout URL for external auth users. | Falls back to `logoutUrl`. |
 | `displayFullnameInAccountBtn` | boolean | Show full name in account button. | Default `true`. |
@@ -104,9 +105,54 @@ Example:
 Note: a stylesheet defined in the geOrchestra `datadir` (default.properties) takes
 precedence over the config file.
 
+## Authenticated account menu
+
+The `config.accountMenu` parameter adds links between "My account" and "Logout" in the dropdown shown **only to signed-in users**. 
+
+The `displayFullnameInAccountBtn: true` parameter keeps the full name in the account button.
+
+The "Login" button remains a simple link for (anonymous) visitors.
+
+The "Logout" is always added last and uses `logoutUrl` (or `logoutExternalUrl` for external authentication).
+
+Without `accountMenu`, the menu keeps "My account" and "Logout". Note that an empty `accountMenu` array also keeps these two default entries.
+
+**Example**:
+
+```json
+{
+  "config": {
+    "displayFullnameInAccountBtn": true,
+    "accountMenu": [
+      { "label": "My maps", "url": "/mapstore/#/home" },
+      { "label": "Services", "url": "/geoserver/web" },
+      { "label": "MviewerStudio", "url": "/mviewerstudio/" },
+      { "label": "Map administration", "url": "/mapstore/#/manager", "hasRole": "ROLE_MAPSTORE_ADMIN" },
+      { "label": "Users", "url": "/console/manager/home", "hasRole": "ROLE_SUPERUSER" }
+    ]
+  }
+}
+```
+
+Each link accepts the following options:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `label` | string | Visible link text. |
+| `i18n` | string | Translation key used instead of `label`. |
+| `url` | string | Required destination URL. Supports `:origin`, `:currentUrl`, and `:lang3` variables. |
+| `target` | string | Where to open the link, for example `_self` or `_blank`. |
+| `customClass` | string | Additional CSS classes applied to the menu entry. |
+| `hasRole` | string | Show the link when the user has at least one of these comma-separated roles. Supports a trailing `*` for prefix matching. |
+| `blockedRole` | string | Hide the link when the user has any of these comma-separated roles. Takes precedence over `hasRole`. |
+| `hideMobile` | boolean | Hide the link when the viewport is narrower than 768px. |
+
+Roles control visibility; target applications remain responsible for access control.
+
 ## Navigation
 
 Navigation is defined as menu groups. Each group becomes a horizontal block on desktop.
+
 Use multiple groups and `navigation.class` (e.g. `justify-between`) to split left/right.
 
 Menu items can be `link` (default), `separator`, or `dropdown`. Dropdowns are single-level.
@@ -158,7 +204,7 @@ Legacy: `menu` is still accepted and maps to `navigation.menus[0]`.
 
 Set `target` on each link in `navigation.menus`, or in a dropdown's `items`.
 
-Example :
+Example:
 
 ```json
 {
@@ -166,7 +212,7 @@ Example :
     "menus": [
       [
         {
-          "label": "Catalogue",
+          "label": "Catalog",
           "url": "/geonetwork",
           "target": "_blank"
         }
@@ -187,8 +233,7 @@ Example :
 
 ## Active tab matching
 
-If multiple `activeAppLink` patterns match, the longest match wins. This keeps the
-active tab aligned with the current page.
+If multiple `activeAppLink` patterns match, the longest match wins.
 
 ## i18n
 

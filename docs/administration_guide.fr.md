@@ -46,6 +46,7 @@ Champs de l'objet config :
 | `login.params` | tableau | Parametres query pour login. | Tableau d'objets a cle unique. |
 | `login.customClass` | string | Classe CSS sur le bouton login/compte. | Optionnel. |
 | `login.showAccountBtnText` | boolean | Afficher le texte "Login". | Optionnel. |
+| `accountMenu` | tableau | Liens supplémentaires du menu du compte connecté. | Optionnel ; déconnexion ajoutée automatiquement. |
 | `logoutUrl` | string | URL de logout. | Defaut `/logout`. |
 | `logoutExternalUrl` | string | URL logout pour auth externe. | Fallback sur `logoutUrl`. |
 | `displayFullnameInAccountBtn` | boolean | Afficher le nom complet. | Defaut `true`. |
@@ -103,6 +104,52 @@ Exemple :
 
 Note : une feuille de style definie dans le `datadir` geOrchestra
 (default.properties) est prioritaire.
+
+## Menu du compte connecté
+
+`config.accountMenu` ajoute des liens entre « Mon compte » et « Déconnexion »
+dans le dropdown affiché uniquement lorsque l'utilisateur est connecté.
+`displayFullnameInAccountBtn: true` conserve le nom complet dans le bouton. Le bouton « Connexion » reste un lien simple pour
+les visiteurs. « Déconnexion » est toujours ajouté en dernier et utilise
+`logoutUrl` (ou `logoutExternalUrl` pour une authentification externe).
+
+Sans `accountMenu`, le menu conserve « Mon compte » et « Déconnexion ».
+Un tableau vide conserve également ces deux entrées par défaut.
+
+Exemple correspondant à un menu de compte personnalisé (adapter les URL et les
+rôles à votre déploiement) :
+
+```json
+{
+  "config": {
+    "displayFullnameInAccountBtn": true,
+    "accountMenu": [
+      { "label": "Mes cartes", "url": "/mapstore/#/home" },
+      { "label": "Services", "url": "/geoserver/web" },
+      { "label": "Métadonnées", "url": "/geonetwork/srv/:lang3/catalog.edit#/board" },
+      { "label": "MviewerStudio", "url": "/mviewerstudio/" },
+      { "label": "Cartes admin", "url": "/mapstore/#/manager", "hasRole": "ROLE_MAPSTORE_ADMIN" },
+      { "label": "Utilisateurs", "url": "/console/manager/home", "hasRole": "ROLE_SUPERUSER" }
+    ]
+  }
+}
+```
+
+Chaque lien accepte les options suivantes :
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `label` | string | Texte visible du lien. |
+| `i18n` | string | Clé de traduction utilisée à la place de `label`. |
+| `url` | string | URL de destination obligatoire. Accepte les variables `:origin`, `:currentUrl` et `:lang3`. |
+| `target` | string | Cible d'ouverture du lien, par exemple `_self` ou `_blank`. |
+| `customClass` | string | Classes CSS supplémentaires appliquées à l'entrée du menu. |
+| `hasRole` | string | Affiche le lien si l'utilisateur possède au moins un des rôles séparés par des virgules. Accepte un `*` final pour rechercher par préfixe. |
+| `blockedRole` | string | Masque le lien si l'utilisateur possède un des rôles séparés par des virgules. Prioritaire sur `hasRole`. |
+| `hideMobile` | boolean | Masque le lien lorsque la largeur de la fenêtre est inférieure à 768px. |
+
+Les rôles contrôlent la visibilité ; les applications cibles restent responsables
+du contrôle des accès.
 
 ## Navigation
 

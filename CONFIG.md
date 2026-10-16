@@ -29,6 +29,52 @@ Full configuration [is here](./src/config-interfaces.ts#L32-L53).
 
 :warning: You can also define stylesheet in the datadir (`default.properties`) because this file can be used in other georchestra's apps. It will take precedence over the one set in the config file of the header.
 
+## Authenticated account menu
+
+The `config.accountMenu` parameter will adds links between account details and logout in the dropdown shown **only to signed-in users**. 
+
+You can also set `displayFullnameInAccountBtn: true` to keep the full name in the account button. 
+
+Other (anonymous) visitors will only see the simple login link.
+
+The logout button will be always appended and uses `logoutUrl` (or `logoutExternalUrl` for external authentication).
+
+If you omit `accountMenu`, this will keep the default behavior (only shows account details and logout link).
+
+Note that an empty `config.accountMenu` array will keeps both default links.
+
+**Example :**
+
+```json
+{
+  "config": {
+    "displayFullnameInAccountBtn": true,
+    "accountMenu": [
+      { "label": "Mes cartes", "url": "/mapstore/#/home" },
+      { "label": "Services", "url": "/geoserver/web" },
+      { "label": "MviewerStudio", "url": "/mviewerstudio/" },
+      { "label": "Cartes admin", "url": "/mapstore/#/admin", "hasRole": "ROLE_MAPSTORE_ADMIN" },
+      { "label": "Utilisateurs", "url": "/console/", "hasRole": "ROLE_SUPERUSER" }
+    ]
+  }
+}
+```
+
+All `accountMenu` items accept the following options:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `label` | string | Visible link text. |
+| `i18n` | string | Translation key used instead of `label`. |
+| `url` | string | Required destination URL. Supports `:origin`, `:currentUrl`, and `:lang3` variables. |
+| `target` | string | Where to open the link, for example `_self` or `_blank`. |
+| `customClass` | string | Additional CSS classes applied to the menu entry. |
+| `hasRole` | string | Show the link when the user has at least one of these comma-separated roles. Supports a trailing `*` for prefix matching. |
+| `blockedRole` | string | Hide the link when the user has any of these comma-separated roles. Takes precedence over `hasRole`. |
+| `hideMobile` | boolean | Hide the link when the viewport is narrower than 768px. |
+
+Roles control visibility; target applications remain responsible for access control.
+
 ## Navigation
 
 Navigation can contain three types of objects: `link` (by default), `separator`, or `dropdown`.

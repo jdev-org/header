@@ -1,15 +1,67 @@
 <script setup lang="ts">
 import { t } from '@/i18n'
-import { state } from '@/shared'
+import { checkCondition, replaceUrlsVariables, state } from '@/shared'
+import type { AccountMenuItem } from '@/config-interfaces'
 import UserIcon from '@/ui/icons/UserIcon.vue'
 import LoginIcon from '@/ui/icons/LoginIcon.vue'
-import { capitalize } from 'vue'
+import { capitalize, computed } from 'vue'
 
 const props = defineProps<{
   isAnonymous: boolean
   logoutUrl: string
   loginUrl: string
 }>()
+
+/** Checks whether the current user can see this menu link. */
+function isAccountItemVisible(item: AccountMenuItem): boolean {
+  const user = state.user
+
+  if (!user) {
+    return false
+  }
+
+  // A blocked role hides the link, even when hasRole is not set.
+  if (item.blockedRole) {
+    const blockedRoles = item.blockedRole.split(',')
+
+    for (const role of blockedRoles) {
+      if (user.roles.includes(role)) {
+        return false
+      }
+    }
+  }
+
+  // Apply shared conditions: allowed roles and mobile visibility.
+  return checkCondition(item)
+}
+
+/** Lists the account details link and visible configured links. */
+const accountItems = computed<AccountMenuItem[]>(() => {
+  // Always place the account details link first.
+  const items: AccountMenuItem[] = [
+    { i18n: 'account_details', url: '/console/account/userdetails' },
+  ]
+
+  // Add configured links in their original order.
+  const configuredItems = state.config.accountMenu
+
+  if (configuredItems) {
+    for (const item of configuredItems) {
+      items.push(item)
+    }
+  }
+
+  // Keep only links visible to the current user.
+  const visibleItems: AccountMenuItem[] = []
+
+  for (const item of items) {
+    if (isAccountItemVisible(item)) {
+      visibleItems.push(item)
+    }
+  }
+
+  return visibleItems
+})
 </script>
 <template>
   <div class="flex justify-center items-center mx-2 xl:mx-6 header-right">
@@ -52,11 +104,19 @@ const props = defineProps<{
             </span>
           </div>
           <ul class="dropdown font-semibold">
-            <li class="px-4 transition-colors duration-100">
+            <li
+              v-for="(item, index) in accountItems"
+              :key="index"
+              :class="['px-4 transition-colors duration-100', item.customClass]"
+            >
               <a
                 class="first-letter:capitalize"
-                href="/console/account/userdetails"
-                >{{ t('account_details') }}
+                :href="replaceUrlsVariables(item.url)"
+                :target="item.target"
+                :rel="
+                  item.target === '_blank' ? 'noopener noreferrer' : undefined
+                "
+                >{{ item.i18n ? t(item.i18n) : item.label }}
               </a>
             </li>
             <li class="px-4 transition-colors duration-100">

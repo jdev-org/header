@@ -6,6 +6,11 @@
     "hideLogin": false,
     "iconsUrl": "https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css",
     "lang": "fr",
+    "displayFullnameInAccountBtn": true,
+    "accountMenu": [
+      { "label": "Mes cartes", "url": "/mapstore/#/home" },
+      { "label": "MviewerStudio", "url": "/mviewerstudio/" }
+    ],
     "login": {
       "url": ":origin/login",
       "params": [{ "redirect": ":origin/success" }]

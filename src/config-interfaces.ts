@@ -45,6 +45,17 @@ export interface Dropdown extends AbstractBaseInterface {
 
 export interface Separator extends AbstractBaseInterface {}
 
+export interface AccountMenuItem {
+  label?: string
+  url: string
+  i18n?: string
+  target?: string
+  customClass?: string
+  hasRole?: string
+  blockedRole?: string
+  hideMobile?: boolean
+}
+
 export interface Navigation {
   class?: string
   menus?: Array<Array<Link | Separator | Dropdown>>
@@ -76,6 +87,8 @@ export interface Config {
   logoutUrl: string
   //Use it if you want a different logout URL for external authentication providers
   logoutExternalUrl?: string
+  //Extra links between account details and logout in the authenticated user's dropdown
+  accountMenu?: AccountMenuItem[]
   //Menu items to display in the header
   displayFullnameInAccountBtn?: boolean
 }
