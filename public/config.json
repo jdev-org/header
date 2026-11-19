@@ -26,6 +26,16 @@
         "hasRole": "ROLE_USER"
       },
       {
+        "label": "Gaïa",
+        "url": "/gaia/",
+        "hasRole": "ROLE_SUPERUSER"
+      },
+      {
+        "label": "Superset",
+        "url": "/superset/",
+        "hasRole": "ROLE_SUPERSET_ADMIN"
+      },
+      {
         "label": "Cartes admin",
         "url": "/mapstore/#/admin",
         "hasRole": "ROLE_MAPSTORE_ADMIN"
