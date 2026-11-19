@@ -23,6 +23,10 @@ export default defineConfig({
       '^/(whoami|\\?login|logout)': {
         target: 'https://demo.georchestra.org',
         changeOrigin: true,
+        // Simulate the authenticated user from the local fixture during development.
+        bypass(req) {
+          if (req.url?.split('?')[0] === '/whoami') return '/whoami.json'
+        },
       },
     },
   },

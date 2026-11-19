@@ -1,15 +1,94 @@
 {
     "GeorchestraUser": {
-        "lastUpdated": "774023e16aab40b59f83b0534dad49882fb03c0abebfd8c53dd7494eb1541ed5",
-        "firstName": "john",
-        "lastName": "doe",
+        "username": "testuser",
         "roles": [
+            "ROLE_SUPERUSER",
+            "ROLE_MAPSTORE_ADMIN",
+            "ROLE_USER",
             "ROLE_ADMINISTRATOR",
-            "ROLE_USER"
+            "ROLE_GN_ADMIN",
+            "ROLE_GN_EDITOR",
+            "ROLE_GN_REVIEWER"
         ],
-        "organization": "foo",
-        "id": "2e6eef8f-2b3c-4589-a9d5-4z4fc45ebdk7",
-        "email": "johndoe@foo.fr",
-        "username": "jdoe"
+        "organization": "example",
+        "id": "00000000-0000-4000-8000-000000000001",
+        "lastUpdated": "0000000000000000000000000000000000000000000000000000000000000000",
+        "firstName": "Jean",
+        "lastName": "Dupont",
+        "email": "jean.dupont@example.com",
+        "postalAddress": null,
+        "telephoneNumber": null,
+        "title": null,
+        "notes": null,
+        "ldapWarn": false,
+        "ldapRemainingDays": null,
+        "isExternalAuth": false,
+        "oauth2Provider": null,
+        "oauth2Uid": null,
+        "oauth2OrgId": null
+    },
+    "org.georchestra.gateway.security.ldap.extended.GeorchestraUserNamePasswordAuthenticationToken": {
+        "configName": "default",
+        "details": null,
+        "name": "testuser",
+        "authorities": [
+            {
+                "authority": "ROLE_SUPERUSER"
+            },
+            {
+                "authority": "ROLE_MAPSTORE_ADMIN"
+            },
+            {
+                "authority": "ROLE_USER"
+            },
+            {
+                "authority": "ROLE_ADMINISTRATOR"
+            },
+            {
+                "authority": "ROLE_GN_ADMIN"
+            },
+            {
+                "authority": "ROLE_GN_EDITOR"
+            },
+            {
+                "authority": "ROLE_GN_REVIEWER"
+            }
+        ],
+        "principal": {
+            "dn": "uid=testuser,ou=users,dc=example,dc=org",
+            "password": null,
+            "username": "testuser",
+            "authorities": [
+                {
+                    "authority": "ROLE_SUPERUSER"
+                },
+                {
+                    "authority": "ROLE_MAPSTORE_ADMIN"
+                },
+                {
+                    "authority": "ROLE_USER"
+                },
+                {
+                    "authority": "ROLE_ADMINISTRATOR"
+                },
+                {
+                    "authority": "ROLE_GN_ADMIN"
+                },
+                {
+                    "authority": "ROLE_GN_EDITOR"
+                },
+                {
+                    "authority": "ROLE_GN_REVIEWER"
+                }
+            ],
+            "accountNonExpired": true,
+            "accountNonLocked": true,
+            "credentialsNonExpired": true,
+            "enabled": true,
+            "timeBeforeExpiration": 2147483647,
+            "graceLoginsRemaining": 2147483647
+        },
+        "credentials": null,
+        "authenticated": true
     }
 }
