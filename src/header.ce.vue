@@ -124,6 +124,14 @@ onMounted(() => {
               state.menu = json.menu
             }
             setI18nAndActiveApp(json.i18n)
+
+            for (const fontsUrl of state.config.fontsUrls ?? []) {
+              const link = document.createElement('link')
+              link.rel = 'stylesheet'
+              link.href = fontsUrl
+              if (props.customNonce) link.nonce = props.customNonce
+              document.head.appendChild(link)
+            }
           })
       else setI18nAndActiveApp()
     })

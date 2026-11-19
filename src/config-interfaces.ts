@@ -91,4 +91,6 @@ export interface Config {
   accountMenu?: AccountMenuItem[]
   //Menu items to display in the header
   displayFullnameInAccountBtn?: boolean
+  // Custom: font stylesheets loaded in the host document.
+  fontsUrls?: string[]
 }
