@@ -45,6 +45,10 @@ header.host .header-nav {
   margin-left: 15px;
 }
 
+header.host .header-nav > div {
+  height: 100%;
+}
+
 header.host .nav-item {
   display: flex;
   align-items: center;
@@ -54,6 +58,14 @@ header.host .nav-item {
   color: var(--santegraphie-link);
   font-size: 16px;
   white-space: nowrap;
+}
+
+header.host .nav-item span,
+header.host .santegraphie-tutorials {
+  font-family: Quicksand, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--georchestra-header-primary);
 }
 
 header.host .nav-item::after {
@@ -70,10 +82,6 @@ header.host .nav-item .item-icon {
   width: 18px !important;
   height: 18px !important;
   flex-shrink: 0;
-}
-
-header.host .santegraphie-tutorials {
-  font-weight: 400;
 }
 
 header.host .santegraphie-tutorials .item-icon {
@@ -103,22 +111,21 @@ header.host .santegraphie-account:hover {
 
 /* Keep the native first and last name, beside the profile icon. */
 header.host button.santegraphie-account {
-  display: grid;
-  grid-template-columns: 20px minmax(0, 100px);
-  grid-template-rows: repeat(2, 14px);
-  column-gap: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
   text-align: left;
 }
 
 header.host button.santegraphie-account > svg {
-  grid-column: 1;
-  grid-row: 1 / 3;
+  flex-shrink: 0;
+  margin-right: 6px;
   width: 20px;
   height: 20px;
 }
 
 header.host button.santegraphie-account > span {
-  grid-column: 2;
   max-width: 100%;
   line-height: 14px;
 }
@@ -206,7 +213,6 @@ header.host .nav-item-mobile.active {
   }
 
   header.host button.santegraphie-account {
-    grid-template-columns: 20px minmax(0, 75px);
     padding-right: 10px;
     padding-left: 10px;
   }
