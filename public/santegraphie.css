@@ -1,28 +1,15 @@
-/* Loaded in the Shadow DOM via stylesheet and in the host via fontsUrls. */
-@font-face {
-  font-family: Quicksand;
-  src: url('./fonts/Quicksand-Regular.ttf') format('truetype');
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: Quicksand;
-  src: url('./fonts/Quicksand-Bold.ttf') format('truetype');
-  font-style: normal;
-  font-weight: 600 700;
-  font-display: swap;
-}
-
-header.host {
+/*Commons Variables - used by gateway login page and header */
+:root {
   --georchestra-header-primary: #3dabb1;
-  --georchestra-header-primary-light: #edf6f6;
-  --santegraphie-link: #58aab6;
-  font-family: Quicksand, sans-serif;
-  color: #333;
-  background: white;
+  --georchestra-header-secondary: white;
+  --georchestra-header-primary-light: white;
+  --georchestra-header-secondary-light: #eee;
+  --georchestra-header-primary-dark: #33888c;
+  /*Fonts*/
+  --fontMarianne: 'Marianne', sans-serif;
+  --fontQuicksand: 'Quicksand', sans-serif;
 }
+
 
 header.host button,
 header.host a {
@@ -216,4 +203,17 @@ header.host .nav-item-mobile.active {
     padding-right: 10px;
     padding-left: 10px;
   }
+
+  header.host .santegraphie-account {
+    margin: 0;
+    padding: 8px 18px;
+    border-radius: 10px;
+    background: var(--georchestra-header-primary);
+    color: white;
+    font-size: 15px;
+    font-weight: 400;
+  }
+  .text-xs {
+    font-size: 15px !important;
+  }  
 }
